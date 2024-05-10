@@ -1,0 +1,10 @@
+.heroSection{
+    background-image: url("/src/assets/hero.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.heroOverlay{
+    opacity: 0.5; 
+    background-color: rgb(0, 0, 0);
+}

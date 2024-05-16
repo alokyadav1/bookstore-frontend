@@ -5,9 +5,11 @@ import CartCard from '../../components/user/CartCard'
 import { FaChevronCircleDown } from "react-icons/fa";
 import "../../App.css"
 import { useNavigate } from 'react-router-dom';
+import axios from "../../Axios/axios"
 
 
 function Cart() {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const navigate = useNavigate()
     const {cart, dispatchCart} = useContext(AppContext)
     const [isExpanded, setIsExpanded] = useState(false)
@@ -46,7 +48,12 @@ function Cart() {
         return acc + (item.book.price * item.quantity)
     },0)
 
-    const handleDeleteCart = () => {
+    const handleDeleteCart = async() => {
+        const res = await axios.delete("/api/cart/delete-cart",{
+            headers:{
+                Authorization:`Bearer ${currentUser.token}`
+            }
+        })
         dispatchCart({
             type:"DELETE_CART",
         })

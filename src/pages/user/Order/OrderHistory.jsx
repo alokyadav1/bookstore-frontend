@@ -1,27 +1,28 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import OrderItem from "./OrderItem";
 import OrderDetails from "./OrderDetail";
-
-
+import Image from "../../../assets/img.png"
+import axios from "../../../Axios/axios"
 
 
 function OrderHistory() {
-  const orders = [
-    {
-      placedDate: "June 2, 2023",
-      total: "$157.99",
-      shipTo: "Irakli Lolashvili",
-      orderNumber: "Order # 112-0822160-5390023",
-    },
-    {
-      placedDate: "June 2, 2023",
-      total: "$157.99",
-      shipTo: "Irakli Lolashvili",
-      orderNumber: "Order # 112-0822160-5390023",
-    },
-  ];
+  // const orders = [
+  //   {
+  //     placedDate: "June 2, 2023",
+  //     total: "$157.99",
+  //     shipTo: "Irakli Lolashvili",
+  //     orderNumber: "Order # 112-0822160-5390023",
+  //   },
+  //   {
+  //     placedDate: "June 2, 2023",
+  //     total: "$157.99",
+  //     shipTo: "Irakli Lolashvili",
+  //     orderNumber: "Order # 112-0822160-5390023",
+  //   },
+  // ];
 
   const orderItems = [
     {
@@ -47,10 +48,28 @@ function OrderHistory() {
       sellerImageAlt: "Seller Image",
     },
   ];
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+
+  const [orders, setorders] = useState([])
+
+  useEffect(() => {
+    const fetchOrderHistory = async () => {
+      const res = await axios.get("/api/orders/get-orders", {
+        headers: {
+          Authorization: `Bearer ${currentUser?.token}`,
+        }
+      })
+      setorders(res.data)
+    }
+
+    fetchOrderHistory()
+  }, [currentUser.token])
+
+  console.log("order: ", orders);
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="flex flex-col px-11 pt-5 bg-white border m-4 rounded shadow-sm w-2/3 max-w-2/3 max-md:px-5">
+    <div className="flex items-center justify-center font-medium">
+      <div className="flex flex-col px-11 pt-5 bg-white border m-4 rounded shadow-sm md:w-2/3 md:max-w-2/3 max-md:px-5">
         <div className="flex gap-4 self-start text-xs leading-5 text-zinc-900">
           <div className="my-auto">Your Orders</div>
           <img
@@ -59,49 +78,60 @@ function OrderHistory() {
             className="shrink-0 w-9 border border-violet-600 border-solid aspect-[1.79]"
           />
         </div>
-        <div className="flex gap-5 justify-between mt-5 w-full max-md:flex-wrap max-md:max-w-full">
-          <div className="flex gap-0 py-px pl-1.5 bg-white rounded shadow-sm">
-            <div className="justify-center px-9 py-2.5 my-auto text-xs leading-5 whitespace-nowrap bg-white rounded border border-solid border-zinc-900 text-zinc-900 max-md:px-5">
-              Orders
-            </div>
-            <div className="flex gap-5 justify-between px-3.5 py-3 text-xs leading-4 text-gray-600 rounded shadow-sm bg-zinc-100">
-              <button>Not Yet Shipped</button>
-              <button>Cancelled Orders</button>
-            </div>
-          </div>
-          <div className="flex gap-1.5 justify-center p-2.5 my-auto text-xs leading-5 rounded border border-solid bg-zinc-100 border-zinc-900 text-zinc-900">
-            <div className="grow my-auto">Past 3 Month</div>
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/175340dea6e3696141d41781cff1349e97479cd838133535c11f5e95e73e39b6?apiKey=9f77487837bf4515971f5e92222e87f9&" alt="" className="shrink-0 w-3 aspect-square" />
-          </div>
-        </div>
-        {orders.map((order, index) => (
-          <div>
-            <OrderDetails key={index} order={order} />
-            <div className="flex flex-col px-7 pt-3 pb-7 bg-white rounded shadow-sm max-md:px-5 max-md:max-w-full">
-              <div className="flex gap-5 justify-between px-4 py-2.5 w-full text-xs leading-4 bg-orange-100 rounded shadow-sm text-zinc-900 max-md:flex-wrap max-md:max-w-full">
-                <div className="flex gap-0.5">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/40c6ad58d93f6f0e469c2918fdacbdafdef33b45ae30c82e5146aa3c5bdf91aa?apiKey=9f77487837bf4515971f5e92222e87f9&"
-                    alt=""
-                    className="shrink-0 w-4 aspect-square"
-                  />
-                  <div className="flex-auto my-auto">
-                    Please rate your experience with the seller
+        {
+          orders.length > 0 ? (
+            <div>
+              <div className="flex gap-5 justify-between mt-5 rounded-lg w-full max-md:flex-wrap max-md:max-w-full bg-zinc-100 p-1 ">
+                <div className="flex gap-0 bg-zinc-100 rounded-lg">
+                  <div className="justify-center px-9 py-2.5 text-xs leading-5 whitespace-nowrap bg-white rounded-lg text-zinc-900 max-md:px-5">
+                    Orders
+                  </div>
+                  <div className="flex gap-5 justify-between px-3.5 py-3 text-xs leading-4 text-gray-600 bg-zinc-100">
+                    <button>Not Yet Shipped</button>
+                    <button>Cancelled Orders</button>
                   </div>
                 </div>
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/0bc1acf4af14a35c48fc0bce71e7f245cfbbcfc9365216d93bd96dfcfd1be96f?apiKey=9f77487837bf4515971f5e92222e87f9&"
-                  alt=""
-                  className="shrink-0 my-auto w-3 aspect-square"
-                />
+                <select name="time-period" id="time-period" className="flex gap-1.5 justify-center p-2.5 my-auto text-xs leading-5 rounded border border-solid bg-zinc-100 border-zinc-400 text-zinc-900 ">
+                  <option value="1-month">Past 1 Month</option>
+                  <option value="3-month">Past 3 Month</option>
+                  <option value="All">All</option>
+                </select>
               </div>
-              {orderItems.map((item, index) => (
-                <OrderItem key={index} item={item} />
+              {orders.map((order, index) => (
+                <div>
+                  <OrderDetails key={index} order={order} />
+                  <div className="flex flex-col px-7 pt-3 pb-7 bg-white rounded shadow-sm max-md:px-5 max-md:max-w-full">
+                    <div className="flex gap-5 justify-between px-4 py-2.5 w-full text-xs leading-4 bg-orange-100 rounded shadow-sm text-zinc-900 max-md:flex-wrap max-md:max-w-full">
+                      <div className="flex gap-0.5">
+                        <img
+                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/40c6ad58d93f6f0e469c2918fdacbdafdef33b45ae30c82e5146aa3c5bdf91aa?apiKey=9f77487837bf4515971f5e92222e87f9&"
+                          alt=""
+                          className="shrink-0 w-4 aspect-square"
+                        />
+                        <div className="flex-auto my-auto">
+                          Please rate your experience with the seller
+                        </div>
+                      </div>
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/0bc1acf4af14a35c48fc0bce71e7f245cfbbcfc9365216d93bd96dfcfd1be96f?apiKey=9f77487837bf4515971f5e92222e87f9&"
+                        alt=""
+                        className="shrink-0 my-auto w-3 aspect-square"
+                      />
+                    </div>
+                    {order.orderDetail.map((item, index) => (
+                      <OrderItem key={index} item={item} />
+                    ))}
+                  </div>
+                </div>
+
               ))}
             </div>
-          </div>
-
-        ))}
+          ) : (
+            <div className="flex justify-center items-center h-96">
+              <p className="font-extrabold text-4xl text-zinc-200">No order History</p>
+            </div>
+          )
+        }
 
       </div>
     </div>

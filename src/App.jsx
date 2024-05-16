@@ -16,6 +16,9 @@ import Cart from './pages/user/Cart'
 import CheckoutPage from './pages/user/Checkout'
 import PaymentSuccessfulPage from './pages/user/PaymentSuccessful'
 import OrderHistory from './pages/user/Order/OrderHistory'
+import Category from './pages/user/Category'
+import SearchResult from './pages/user/SearchResult'
+import BookDetail from './pages/user/BookDetail'
 function App() {
 
   const [user, dispatchUser] = useReducer(UserReducer, null)
@@ -29,7 +32,7 @@ function App() {
           Authorization: `Bearer ${currentUser?.token}`
         }
       })
-      console.log("app res: ",res);
+      console.log("app res: ", res);
       dispatchUser({
         type: "SET_USER",
         payload: res.data.user
@@ -38,9 +41,9 @@ function App() {
 
     if (currentUser?.token != null) {
       fetchUser()
-    }   
-  
-  },[])
+    }
+
+  }, [])
 
   const ProtectedUrl = ({ children }) => {
     if (userRole !== "User") {
@@ -50,16 +53,19 @@ function App() {
   }
   return (
     <>
-      <UserContext.Provider value={{user, dispatchUser}}>
+      <UserContext.Provider value={{ user, dispatchUser }}>
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/user' element={<UserDashBoard />}>
-              <Route index element={<Dashboard/>} />
-              <Route path='cart' element={<Cart/>}/>
-              <Route path='checkout' element={<CheckoutPage/>}/>
-              <Route path='checkout/payment-success' element={<PaymentSuccessfulPage/>}/>
-              <Route path='orderHistory' element={<OrderHistory/>}/>
+              <Route index element={<Dashboard />} />
+              <Route path='cart' element={<Cart />} />
+              <Route path='checkout' element={<CheckoutPage />} />
+              <Route path='checkout/payment-success' element={<PaymentSuccessfulPage />} />
+              <Route path='orderHistory' element={<OrderHistory />} />
+              <Route path='category/:categoryName' element={<Category />} />
+              <Route path='search/:keyword' element={<SearchResult />} />
+              <Route path='book/:bookID' element={<BookDetail />} />
             </Route>
             <Route path='/user/login' element={<LoginPage />} />
             <Route path='/user/register' element={<Register />} />

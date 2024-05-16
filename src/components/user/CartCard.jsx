@@ -7,9 +7,11 @@ import { GoHeart } from "react-icons/go";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from 'react-toastify';
 import AppContext from '../../context/AppContext';
+import axios from "../../Axios/axios"
 
 function CartCard({ cartItem }) {
     const {dispatchCart} = useContext(AppContext)
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
 
     const handleQuantityIncrement = () => {
         if (cartItem.quantity < 10) {
@@ -38,7 +40,13 @@ function CartCard({ cartItem }) {
         }
     }
 
-    const handleRemoveItem = () => {
+    const handleRemoveItem = async() => {
+        const res = await axios.delete(`/api/cart/remove/${cartItem.book.bookID}`,{
+            headers:{
+                Authorization:`Bearer ${currentUser.token}`
+            }
+        })
+        
         dispatchCart({
             type:"REMOVE_FROM_CART",
             payload:{

@@ -9,10 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import UserContext from '../../context/UserContext';
 import axios from "../../Axios/axios"
+import { showToast } from '../../utils/toast';
 import Reviews from '../../components/user/Review/Reviews';
 import BookRating from '../../components/user/BookRating';
 import DeleteModal from '../../components/user/Review/DeleteModal';
 import Header from "../../components/user/Header"
+import BookSuggestion from '../../components/user/BookSuggestion';
 
 // handle add to cart
 function BookDetail() {
@@ -25,6 +27,8 @@ function BookDetail() {
     const [rating, setRating] = useState(0)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const [reviews, setReviews] = useState([]);
+    const [review, setReview] = useState("")
+    const [showError, setShowError] = useState(false)
 
 
     const book = books?.find(book => book.bookID == bookID)
@@ -40,6 +44,7 @@ function BookDetail() {
             console.log("reviews res: ", res);
         }
         fetchReviews()
+        scrollToTop()
     }, [bookID, currentUser.token])
 
 
@@ -63,7 +68,7 @@ function BookDetail() {
             }
         })
         setQuantity(1)
-        addToCartToast()
+        showToast("Book added to cart")
     }
 
     const handleBuyNow = () => {
@@ -82,7 +87,7 @@ function BookDetail() {
         if (quantity < 10) {
             setQuantity(quantity + 1)
         } else {
-            showToast()
+            showToast("You can add only 10 Quantities")
         }
     }
 
@@ -92,29 +97,50 @@ function BookDetail() {
         }
     }
 
+    const handleSubmitReview = async (e) => {
+        e.preventDefault();
+        if (rating <= 0) {
+            setShowError(true)
+            return;
+        }
+        const data = {
+            comment: review,
+            rating: rating
+        }
+
+        const header = {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        }
+        const res = await axios.post(`/api/review/add-review/${bookID}`, data, header)
+        if (res.status == 200) {
+            showToast("Review Added successfully")
+        } else {
+            showToast("There was an error.")
+        }
+        setReview("")
+        setShowError(false)
+    }
+
     const handleDelete = () => {
         setShowDeleteModal((prev) => !prev);
     };
 
-    const showToast = () => {
-        toast("You can add only 10 Quantities", {
-            position: "top-center",
-            theme: "light"
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'instant'
         })
     }
 
-    const addToCartToast = () => {
-        toast("Book added to cart", {
-            position: "top-center",
-            theme: "light"
-        })
-    }
     if (!book) {
         return <div>Book not found</div>;
     }
 
     return (
         <>
+            <ToastContainer />
             <Header />
             <div className='p-2 mt-16'>
                 <div className='flex'>
@@ -141,7 +167,6 @@ function BookDetail() {
                                     </p>
                                 </div>
                                 <div className='py-2'>
-                                    <ToastContainer />
                                     <div className='flex gap-4 border p-2 rounded-md w-fit'>
                                         <button className='text-sm' onClick={() => handleQuantityDecrement(book.bookID)}>
                                             <FiMinus />
@@ -172,7 +197,7 @@ function BookDetail() {
                     </div>
 
                     {/* Reviews */}
-                    <div className=' md:w-1/3 relative w-fit max-h-screen overflow-auto'>
+                    <div className=' md:w-1/3 relative border rounded-md w-fit max-h-screen overflow-auto no-scrollbar px-2'>
                         <Reviews onDeleteReview={handleDelete} reviews={reviews} />
                     </div>
 
@@ -191,22 +216,45 @@ function BookDetail() {
                                     <FaStar
                                         key={index}
                                         className={`${rating > index ? 'text-orange-500' : 'text-slate-400'} text-3xl cursor-pointer`}
-                                        onClick={(e) => setRating(index+1)}
+                                        onClick={(e) => setRating(index + 1)}
                                     />
                                 )
                             })
                         }
                     </div>
+                    {
+                        showError && <p className='text-center mt-1 text-red-900 text-sm'>Please select rating!</p>
+                    }
                     <div className=" flex items-center gap-2 mt-4">
-                        <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
-                            <p>{user.username[0].toUpperCase()}</p>
-                        </div>
-                        <textarea placeholder="Write a review..." rows={5} className="flex-grow border-1 rounded-md" />
-                        <button className="bg-blue-700 text-white px-2 p-1 rounded-md">Submit</button>
+                        <form className='flex items-center gap-2 mt-4 w-full' onSubmit={handleSubmitReview}>
+                            <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
+                                <p>{user.username[0].toUpperCase()}</p>
+                            </div>
+                            <textarea
+                                placeholder="Write a review..."
+                                rows={4}
+                                className="flex-grow border border-slate-400 rounded-md p-2"
+                                onChange={(e) => setReview(e.target.value)}
+                            />
+                            <button
+                                type='submit'
+                                className="bg-blue-700 text-white px-2 p-1 rounded-md"
+                            >Submit</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
-
+            <div className='p-5'>
+                <h3 className='text-xl font-bold mb-2'>You may Like</h3>
+                <div>
+                    <BookSuggestion
+                        category={book.category}
+                        author={book.author}
+                        bookID={bookID}
+                        handleClick={scrollToTop} />
+                </div>
+            </div>
             {showDeleteModal && <DeleteModal onDelete={handleDelete} />}
         </>
     );

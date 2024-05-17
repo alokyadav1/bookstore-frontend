@@ -3,37 +3,39 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
 
-const BookRating = ({reviews}) => {
+const BookRating = ({ reviews }) => {
     // Define ratings data
 
     const rating = {}
 
     reviews.forEach(review => {
-        if(rating[review.rating]){
+        if (rating[review.rating]) {
             rating[review.rating]++
         } else {
             rating[review.rating] = 1;
         }
     })
 
-    const ratings = [
-        { stars: 5, count: 1000 },
-        { stars: 4, count: 2000 },
-        { stars: 3, count: 200 },
-        { stars: 2, count: 100 },
-        { stars: 1, count: 300 },
-    ];
+    // const ratings = {
+    //     '2': 1,
+    //     '3': 4,
+    //     '4': 2,
+    //     '5': 1
+    // }
 
     // Calculate total ratings
-    const totalRatings = reviews.length;
+    let totalRatings = reviews.length + 1; // to handle when totalratings is 0. divide by 0 will create abnormal UI
     let ratingSum = 0;
     console.log("rating obj: ", rating);
-    for(let key in rating){
+    for (let key in rating) {
         console.log("rating: ", rating[key]);
         ratingSum += rating[key] * key
     }
     console.log("sum: ", ratingSum);
-    const ratingAvg = ratingSum / totalRatings;
+    let ratingAvg = 0;
+    if (totalRatings > 0) {
+       ratingAvg =  ratingSum / totalRatings;
+    }
     console.log("avg: ", ratingAvg);
 
     // handle rating
@@ -47,13 +49,13 @@ const BookRating = ({reviews}) => {
                         {
                             Array.from({ length: 5 }).map((a, index) => {
                                 return (
-                                    <FaStar key={index} />
+                                    <FaStar key={index} className={ratingAvg > index+1 ? 'text-green-500' : 'text-slate-200'} />
                                 )
                             })
                         }
                     </div>
                     <p className='text-sm'>
-                        <span className='font-bold'>{totalRatings} </span>
+                        <span className='font-bold'>{totalRatings-1} </span>
                         reviews
                     </p>
                 </div>
@@ -62,11 +64,12 @@ const BookRating = ({reviews}) => {
                 {
                     Array.from({ length: 5 }).map((a, index) => {
                         return (
-                            <div key={index} className=' flex gap-2  items-center w-full'>
+                            <div key={index} className=' flex gap-2  items-center justify-between w-full'>
                                 <span>{5 - index}</span>
-                                <div className='bg-slate-200 h-3 w-full rounded-full'>
-                                    <div className='bg-green-400 h-3 rounded-full' style={{ width: `${(5 - index + 1) * 10}%` }}></div>
+                                <div className='bg-slate-200  h-3 flex-grow rounded-full border'>
+                                    <div className='bg-green-400 h-3 rounded-full' style={{ width: `${(rating[5-index] || 0)/totalRatings * 100}%` }}></div>
                                 </div>
+                                <span className='text-zinc-400 px-1'>{rating[5-index] || 0}</span>
                             </div>
                         )
                     })

@@ -106,22 +106,7 @@ function Cart() {
                                 </div>
                             </div>
                             <hr />
-                            <div className='py-2'>
-                                <div
-                                    onClick={() => setIsExpanded(!isExpanded)}
-                                    className='flex items-center justify-between text-blue-500 cursor-pointer'>
-                                    <p>I have a promo code</p>
-                                    <FaChevronCircleDown />
-                                </div>
-                                <div className={`overflow-hidden transition-max-h ${isExpanded ? "h-auto p-2" : "h-0"}`}>
-                                    <form className='flex flex-wrap justify-between'>
-                                        <input type="text"
-                                            className='border rounded-md p-2 w-2/3'
-                                            placeholder='Enter coupon code' />
-                                        <button className=' bg-gray-800 p-2 rounded-lg text-white'>Apply Coupon</button>
-                                    </form>
-                                </div>
-                            </div>
+                            
                             <div>
 
                             </div>

@@ -14,25 +14,33 @@ function Reviews({ onDeleteReview, reviews }) {
   };
   return (
     <>
-      <div className="w-full relative">
-        {
-          reviews.map((review, index) => {
-            return (
-              <div className="">
-                <div>
-                  <ReviewTemplate
-                    key={index}
-                    review={review}
-                    onDeleteReview={handleDelete}
-                  />
+      {
+        reviews.length > 0 ? (
+          <div className="w-full relative">
+            {
+              reviews.map((review, index) => {
+                return (
+                  <div className="">
+                    <div>
+                      <ReviewTemplate
+                        key={index}
+                        review={review}
+                        onDeleteReview={handleDelete}
+                      />
 
-                </div>
+                    </div>
 
-              </div>
-            )
-          })
-        }
-      </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full text-4xl text-zinc-300">
+            No Review
+          </div>
+        )
+      }
     </>
   );
 }

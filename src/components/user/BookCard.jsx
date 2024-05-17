@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Quantity from './Quantity';
 
-const BookCard = ({ book, bookQuantity }) => {
+const BookCard = ({ book, bookQuantity,handleClick }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext)
     const { cart, dispatchCart } = useContext(AppContext);
@@ -76,7 +76,7 @@ const BookCard = ({ book, bookQuantity }) => {
             <Link
                 to={`/user/book/${book.bookID}`}
             >
-                <div>
+                <div onClick={handleClick}>
                     <img className="w-full rounded-lg" src={CoverImg} alt={book.title} />
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">{book.title}</div>

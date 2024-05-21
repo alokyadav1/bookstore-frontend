@@ -8,17 +8,43 @@ import moment from "moment";
 
 function ReviewTemplate({ review, onDeleteReview, }) {
   const { user } = useContext(UserContext)
-  const reviewDate = new Date(review.reviewDate).toLocaleDateString("en-US")
+  const reviewDate = new Date(review.reviewDate)
+  const [upvotes, setUpvotes] = useState(review?.upvotes);
+  const [upvotesDisabled, setUpvoteDisabled] = useState(false)
+  const [downvotesDisabled, setDownvoteDisabled] = useState(false)
+
+
+  const handleUpvotes = () => {
+    setUpvotes(upvotes + 1)
+    setUpvoteDisabled(true)
+    setDownvoteDisabled(false)
+  }
+
+  const handleDownvotes = () => {
+    setUpvotes(upvotes - 1)
+    setDownvoteDisabled(true)
+    setUpvoteDisabled(false)
+  }
+
+
   return (
     <div className="relative">
       <div className="commentTemplate">
         <div className="flex items-center">
-          <div className="upvote">
-            <button>
+          <div className="upvote rounded-md">
+            <button
+              className="rounded-t-md border-b border-slate-200 disabled:cursor-not-allowed disabled:bg-slate-200"
+              disabled={upvotesDisabled}
+              onClick={handleUpvotes}
+            >
               <FaPlus />
             </button>
-            <p>{review?.upvotes}</p>
-            <button>
+            <p className="py-1">{upvotes}</p>
+            <button
+              className="rounded-b-md border-t border-slate-200 disabled:cursor-not-allowed disabled:bg-slate-200"
+              disabled={downvotesDisabled}
+              onClick={handleDownvotes}
+            >
               <FaMinus />
             </button>
           </div>
@@ -42,10 +68,7 @@ function ReviewTemplate({ review, onDeleteReview, }) {
                     </span>{" "}
                     <span className="delete">Delete</span>
                   </div>
-                  <div className="edit">
-                    <FaPen className="editIcon" />
-                    <span>Edit</span>
-                  </div>
+
                 </div>
               )}
             </div>

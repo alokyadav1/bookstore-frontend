@@ -15,6 +15,7 @@ import BookRating from '../../components/user/BookRating';
 import DeleteModal from '../../components/user/Review/DeleteModal';
 import Header from "../../components/user/Header"
 import BookSuggestion from '../../components/user/BookSuggestion';
+import { comment } from 'postcss';
 
 // handle add to cart
 function BookDetail() {
@@ -26,7 +27,9 @@ function BookDetail() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [rating, setRating] = useState(0)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const [reviewExists, setReviewExists] = useState(false)
     const [reviews, setReviews] = useState([]);
+    const [userReview, setUserReview] = useState({ comment: "", rating: 0 })
     const [review, setReview] = useState("")
     const [showError, setShowError] = useState(false)
 
@@ -40,12 +43,15 @@ function BookDetail() {
                     Authorization: `Bearer ${currentUser.token}`
                 }
             })
+            const rev = res.data.find(r => r.email == user.email)
             setReviews(res.data)
+            if(rev != null) setUserReview(rev)
+            setReviewExists(rev != null)
             console.log("reviews res: ", res);
         }
         fetchReviews()
         scrollToTop()
-    }, [bookID, currentUser.token])
+    }, [bookID, currentUser.token, user?.email])
 
 
     const handleAddToCart = async (book) => {
@@ -99,33 +105,49 @@ function BookDetail() {
 
     const handleSubmitReview = async (e) => {
         e.preventDefault();
-        if (rating <= 0) {
+        if (userReview?.rating <= 0) {
             setShowError(true)
             return;
         }
-        const data = {
-            comment: review,
-            rating: rating
-        }
+        const data = userReview;
 
         const header = {
             headers: {
                 Authorization: `Bearer ${currentUser.token}`
             }
         }
-        const res = await axios.post(`/api/review/add-review/${bookID}`, data, header)
-        if (res.status == 200) {
+        try {
+            const res = await axios.post(`/api/review/add-review/${bookID}`, data, header)
             showToast("Review Added successfully")
-        } else {
+            setReviewExists(true)
+        } catch (error) {
             showToast("There was an error.")
         }
         setReview("")
         setShowError(false)
     }
+    const handleDeleteModal = () => {
+        setShowDeleteModal((prev) => !prev);
+    }
 
-    const handleDelete = () => {
+    const handleDelete = async() => {
+        try {
+            const res = await axios.delete(`/api/review/delete-user-review/${bookID}`,{
+                headers:{
+                    Authorization:`Bearer ${currentUser?.token}`
+                }
+            })
+            showToast("Review deleted successfully.")
+        } catch (error) {
+            console.log(error);
+            showToast("Unable to delete the review.")
+        }
         setShowDeleteModal((prev) => !prev);
     };
+
+    const handleCancel = () => {
+        setShowDeleteModal((prev) => !prev);
+    }
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -147,7 +169,7 @@ function BookDetail() {
                     <div className='flex flex-wrap flex-1 gap-4 items center text-zinc-600  md:w-2/5 p-2 rounded-md'>
                         <div className='flex flex-wrap md:flex-nowrap flex-1 gap-4  items center text-zinc-600 p-2 rounded-md'>
                             <div className=''>
-                                <img src={Image} alt={book.title} className=' w-60 h-80 min-w-60 rounded-md' />
+                                <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={book.title} className=' w-60 h-80 min-w-60 rounded-md' />
                             </div>
                             <div className='flex-grow py-2 relative '>
                                 <p className=' text-sm text-white font-semibold bg-orange-600 rounded-md px-1 w-fit'>{book.category}</p>
@@ -161,7 +183,7 @@ function BookDetail() {
 
                                 <div className='flex items-center gap-2'>
                                     <p>All India Delivery</p>
-                                    <p className='relative bg-slate-200 text-green-600 rounded-md shadow-sm px-2'>
+                                    <p className='relative bg-slate-200 text-green-600 rounded-full shadow-sm px-2 text-sm'>
                                         <span className='absolute top-1/2 left-2 -translate-y-1/2 w-2 h-2 bg-green-500 rounded-full'></span>
                                         <span className='pl-3'>In Stock</span>
                                     </p>
@@ -198,7 +220,7 @@ function BookDetail() {
 
                     {/* Reviews */}
                     <div className=' md:w-1/3 relative border rounded-md w-fit max-h-screen overflow-auto no-scrollbar px-2'>
-                        <Reviews onDeleteReview={handleDelete} reviews={reviews} />
+                        <Reviews onDeleteReview={handleDeleteModal} reviews={reviews} />
                     </div>
 
                 </div>
@@ -208,15 +230,19 @@ function BookDetail() {
             {/* Write a Review */}
             <div className='flex justify-center bg-slate-200'>
                 <div className=" p-1 py-3 rounded-lg shadow-sm w-1/2">
-                    <h3 className="text-center text-xl font-bold py-4 ">Write a Review</h3>
+                    <h3 className="text-center text-xl font-bold py-4 ">{reviewExists ? "Your Review" : "Write Review"}</h3>
                     <div className="flex justify-center gap-1 text-slate-400">
                         {
                             Array.from({ length: 5 }).map((a, index) => {
                                 return (
                                     <FaStar
                                         key={index}
-                                        className={`${rating > index ? 'text-orange-500' : 'text-slate-400'} text-3xl cursor-pointer`}
-                                        onClick={(e) => setRating(index + 1)}
+                                        className={`${userReview?.rating > index ? 'text-orange-500' : 'text-slate-400'} text-3xl cursor-pointer`}
+                                        onClick={(e) => {
+                                            if (!reviewExists) {
+                                                setUserReview({ ...userReview, rating: index + 1 })
+                                            }
+                                        }}
                                     />
                                 )
                             })
@@ -228,18 +254,31 @@ function BookDetail() {
                     <div className=" flex items-center gap-2 mt-4">
                         <form className='flex items-center gap-2 mt-4 w-full' onSubmit={handleSubmitReview}>
                             <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
-                                <p>{user.username[0].toUpperCase()}</p>
+                                <p>{user?.username[0].toUpperCase()}</p>
                             </div>
-                            <textarea
-                                placeholder="Write a review..."
-                                rows={4}
-                                className="flex-grow border border-slate-400 rounded-md p-2"
-                                onChange={(e) => setReview(e.target.value)}
-                            />
-                            <button
-                                type='submit'
-                                className="bg-blue-700 text-white px-2 p-1 rounded-md"
-                            >Submit</button>
+                            {
+                                reviewExists ? (
+                                    <div className='border p-2 rounded-md bg-slate-100 w-fit italic text-zinc-500'>
+                                        <q>{userReview?.comment}</q>
+                                    </div>
+                                ) : (
+                                    <textarea
+                                        placeholder="Write a review..."
+                                        rows={4}
+                                        className="flex-grow border border-slate-400 rounded-md p-2"
+                                        value={userReview?.comment}
+                                        onChange={(e) => setUserReview({ ...userReview, comment: e.target.value })}
+                                    />
+                                )
+                            }
+                            {
+                                !reviewExists && (
+                                    <button
+                                        type='submit'
+                                        className="bg-blue-700 text-white px-2 p-1 rounded-md"
+                                    >Submit</button>
+                                )
+                            }
                         </form>
 
                     </div>
@@ -255,7 +294,7 @@ function BookDetail() {
                         handleClick={scrollToTop} />
                 </div>
             </div>
-            {showDeleteModal && <DeleteModal onDelete={handleDelete} />}
+            {showDeleteModal && <DeleteModal onDelete={handleDelete} onCancel={handleCancel} />}
         </>
     );
 }

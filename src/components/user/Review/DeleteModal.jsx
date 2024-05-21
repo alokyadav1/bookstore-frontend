@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React from "react";
-function DeleteModal({onDelete}){
+function DeleteModal({onDelete, onCancel}){
     return(
         <div className="modalContainer z-50">
           <div className="modal md:w-1/4">
@@ -11,7 +11,7 @@ function DeleteModal({onDelete}){
               comment and cant be undone.
             </p>
             <div className="footer">
-              <button className="cancel" onClick={onDelete}>
+              <button className="cancel" onClick={onCancel}>
                 NO, CANCEL
               </button>
               <button className="delete" onClick={onDelete}>

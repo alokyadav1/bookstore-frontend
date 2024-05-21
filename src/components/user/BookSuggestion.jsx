@@ -15,7 +15,7 @@ function BookSuggestion({ category, author, bookID, handleClick }) {
         }
         const filter = filterSuggestedBooks(category, author)
         setSuggestedBooks(filter)
-    }, [author, books, category, suggestedBooks])
+    }, [author, books, category])
 
     return (
         <div className='flex gap-5 overflow-auto'>

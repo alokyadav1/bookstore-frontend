@@ -77,7 +77,7 @@ const BookCard = ({ book, bookQuantity,handleClick }) => {
                 to={`/user/book/${book.bookID}`}
             >
                 <div onClick={handleClick}>
-                    <img className="w-full rounded-lg" src={CoverImg} alt={book.title} />
+                    <img className="w-32 h-48 rounded mx-auto" src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`||Image} alt={book.title} />
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">{book.title}</div>
                         <p className="text-gray-500 text-base italic">{book.description}</p>

@@ -38,7 +38,6 @@ button{
 .upvote{
   background-color: $VeryLightGray;
   margin: 0 10px;
-  border-radius: 10px;
   text-align: center;
   color: $moderateBlue;
   font-size: 12px;
@@ -46,11 +45,9 @@ button{
   height: fit-content;
 }
 .upvote button{
-  border: none;
   background-color: $VeryLightGray;
   padding: 10px 10px;
   cursor: pointer;
-  border-radius:10px ;
   font-size: 10px;
   font-weight: bolder;
   color: $lightGrayishBlue;
@@ -123,9 +120,7 @@ button{
   margin-left: 30px;
 }
 
-button:hover{
-  opacity: .7;
-}
+
 ::placeholder{
   color: $grayishBlue;
   font-family: 'Rubik','sans-serif';

@@ -71,7 +71,7 @@ function CartCard({ cartItem }) {
         <div className='relative flex justify-between border p-2 rounded-md bg-slate-100'>
             <div className='flex gap-2'>
                 <div>
-                    <img src={Image} alt="" className='w-24 h-32 rounded-md' />
+                    <img src={`https://covers.openlibrary.org/b/isbn/${cartItem?.book.isbn}-L.jpg`} alt="" className='w-24 h-32 rounded-md' />
                 </div>
                 <div className='pl-5'>
                     <p className='text-slate-600 font-bold text-lg'>{cartItem?.book.title}</p>

@@ -35,7 +35,7 @@ function SearchResult() {
             {
                 !loading ? (
                     <div className='mt-16 p-2 flex'>
-                        <div className="container mx-auto w-5/12">
+                        <div className="container mx-auto w-fit">
                             <Filter categories={categories} authors={authors} />
                             {/* Add other components here */}
                         </div>
@@ -46,13 +46,17 @@ function SearchResult() {
                             </p>
                             <div className='flex flex-wrap justify-start gap-8 py-4'>
                                 {
-                                    resultBooks != null && (
+                                    resultBooks.length > 0 ? (
                                         resultBooks.map((book, index) => {
                                             return <BookCard
                                                 key={index}
                                                 book={book}
                                                 bookQuantity={0} />
                                         })
+                                    ) : (
+                                        <div className='font-extrabold text-3xl  w-full md:h-96 flex items-center justify-center text-zinc-200'>
+                                            No Book Found
+                                        </div>
                                     )
                                 }
                             </div>

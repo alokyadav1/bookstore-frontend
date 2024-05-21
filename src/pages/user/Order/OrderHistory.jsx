@@ -6,7 +6,7 @@ import OrderItem from "./OrderItem";
 import OrderDetails from "./OrderDetail";
 import Image from "../../../assets/img.png"
 import axios from "../../../Axios/axios"
-
+import Header from "../../../components/user/Header"
 
 function OrderHistory() {
   // const orders = [
@@ -69,7 +69,8 @@ function OrderHistory() {
 
   return (
     <>
-      <div className="flex items-center justify-center font-medium">
+    <Header/>
+      <div className="flex items-center justify-center font-medium mt-16">
         <div className="flex flex-col px-11 pt-5 bg-white border m-4 rounded shadow-sm md:w-2/3 md:max-w-2/3 max-md:px-5">
           <div className="flex gap-4 self-start text-xs leading-5 text-zinc-900">
             <div className="my-auto">Your Orders</div>

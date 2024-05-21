@@ -24,7 +24,7 @@ const BookRating = ({ reviews }) => {
     // }
 
     // Calculate total ratings
-    let totalRatings = reviews.length + 1; // to handle when totalratings is 0. divide by 0 will create abnormal UI
+    let totalRatings = reviews.length; // to handle when totalratings is 0. divide by 0 will create abnormal UI
     let ratingSum = 0;
     console.log("rating obj: ", rating);
     for (let key in rating) {
@@ -32,9 +32,12 @@ const BookRating = ({ reviews }) => {
         ratingSum += rating[key] * key
     }
     console.log("sum: ", ratingSum);
+    console.log("totalRating: ", totalRatings);
     let ratingAvg = 0;
     if (totalRatings > 0) {
-       ratingAvg =  ratingSum / totalRatings;
+       ratingAvg =  ratingSum / (totalRatings);
+    } else {
+        totalRatings = 1;
     }
     console.log("avg: ", ratingAvg);
 
@@ -49,13 +52,13 @@ const BookRating = ({ reviews }) => {
                         {
                             Array.from({ length: 5 }).map((a, index) => {
                                 return (
-                                    <FaStar key={index} className={ratingAvg > index+1 ? 'text-green-500' : 'text-slate-200'} />
+                                    <FaStar key={index} className={ratingAvg >= index+1 ? 'text-green-500' : 'text-slate-200'} />
                                 )
                             })
                         }
                     </div>
                     <p className='text-sm'>
-                        <span className='font-bold'>{totalRatings-1} </span>
+                        <span className='font-bold'>{ratingSum == 0 ? "0" : totalRatings} </span>
                         reviews
                     </p>
                 </div>
@@ -67,7 +70,7 @@ const BookRating = ({ reviews }) => {
                             <div key={index} className=' flex gap-2  items-center justify-between w-full'>
                                 <span>{5 - index}</span>
                                 <div className='bg-slate-200  h-3 flex-grow rounded-full border'>
-                                    <div className='bg-green-400 h-3 rounded-full' style={{ width: `${(rating[5-index] || 0)/totalRatings * 100}%` }}></div>
+                                    <div className='bg-green-400 h-3 rounded-full' style={{ width: `${(rating[5-index] || 0)/(totalRatings) * 100}%` }}></div>
                                 </div>
                                 <span className='text-zinc-400 px-1'>{rating[5-index] || 0}</span>
                             </div>

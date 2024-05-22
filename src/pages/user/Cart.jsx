@@ -2,6 +2,7 @@
 import React, { useContext, useState } from 'react'
 import AppContext from '../../context/AppContext'
 import CartCard from '../../components/user/CartCard'
+import Header from "../../components/user/Header"
 import { FaChevronCircleDown } from "react-icons/fa";
 import "../../App.css"
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,7 @@ import axios from "../../Axios/axios"
 function Cart() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const navigate = useNavigate()
-    const {cart, dispatchCart} = useContext(AppContext)
+    const { cart, dispatchCart } = useContext(AppContext)
     const [isExpanded, setIsExpanded] = useState(false)
     // const cart = [
     //     {
@@ -46,85 +47,88 @@ function Cart() {
 
     const totalPrice = cart.reduce((acc, item) => {
         return acc + (item.book.price * item.quantity)
-    },0)
+    }, 0)
 
-    const handleDeleteCart = async() => {
-        const res = await axios.delete("/api/cart/delete-cart",{
-            headers:{
-                Authorization:`Bearer ${currentUser.token}`
+    const handleDeleteCart = async () => {
+        const res = await axios.delete("/api/cart/delete-cart", {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
             }
         })
         dispatchCart({
-            type:"DELETE_CART",
+            type: "DELETE_CART",
         })
     }
 
     const handleCheckout = () => {
-        navigate("/user/checkout",{
-            state:{cart:cart}
+        navigate("/user/checkout", {
+            state: { cart: cart }
         })
     }
 
     return (
-        <div className='px-2'>
-            <h2 className='text-center font-semibold text-2xl mb-4'>Cart</h2>
-            {
-                cart.length > 0 ? (
-                    <div className='flex flex-wrap gap-5'>
-                        <div className=' flex-1'>
-                            <div className='flex justify-between text-sm font-bold'>
-                                <span>{cart.length} items</span>
-                                <span className='text-red-400 font-normal cursor-pointer' onClick={handleDeleteCart}>Empty cart</span>
-                            </div>
-                            <div className='flex flex-col gap-2 overflow-auto h-fit max-h-screen'>
-                                {
-                                    cart.length > 0 && (
-                                        cart.map(c => <CartCard key={c.book.bookID} cartItem={c} />)
-                                    )
-                                }
-                            </div>
-                        </div>
-                        <div className='relative border flex-1 self-start p-5 rounded-lg mt-5 h-auto'>
-                            <div className='py-2'>
-                                {
-                                    cart.length > 0 && (
-                                        cart.map(c => {
-                                            return (
-                                                <div key={c.book.bookID} className='flex justify-between'>
-                                                    <p>
-                                                        <span className='text-sm'>x{c.quantity}</span> {c.book.title}
-                                                    </p>
-                                                    <p className='font-bold'>&#8377;{c.quantity * c.book.price}</p>
-                                                </div>
-                                            )
-                                        })
-                                    )
-                                }
-                                <div className='flex justify-between'>
-                                    <p>Shipping</p>
-                                    <p className='font-bold'>Free</p>
+        <>
+        <Header/>
+            <div className='px-2 mt-16'>
+                <h2 className='text-center font-semibold text-2xl mb-4'>Cart</h2>
+                {
+                    cart.length > 0 ? (
+                        <div className='flex flex-wrap gap-5'>
+                            <div className=' flex-1'>
+                                <div className='flex justify-between text-sm font-bold'>
+                                    <span>{cart.length} items</span>
+                                    <span className='text-red-400 font-normal cursor-pointer' onClick={handleDeleteCart}>Empty cart</span>
+                                </div>
+                                <div className='flex flex-col gap-2 overflow-auto h-fit max-h-screen'>
+                                    {
+                                        cart.length > 0 && (
+                                            cart.map(c => <CartCard key={c.book.bookID} cartItem={c} />)
+                                        )
+                                    }
                                 </div>
                             </div>
-                            <hr />
-                            
-                            <div>
+                            <div className='relative border flex-1 self-start p-5 rounded-lg mt-5 h-auto'>
+                                <div className='py-2'>
+                                    {
+                                        cart.length > 0 && (
+                                            cart.map(c => {
+                                                return (
+                                                    <div key={c.book.bookID} className='flex justify-between'>
+                                                        <p>
+                                                            <span className='text-sm'>x{c.quantity}</span> {c.book.title}
+                                                        </p>
+                                                        <p className='font-bold'>&#8377;{c.quantity * c.book.price}</p>
+                                                    </div>
+                                                )
+                                            })
+                                        )
+                                    }
+                                    <div className='flex justify-between'>
+                                        <p>Shipping</p>
+                                        <p className='font-bold'>Free</p>
+                                    </div>
+                                </div>
+                                <hr />
 
+                                <div>
+
+                                </div>
+                                <hr />
+                                <div className='flex justify-between'>
+                                    <p className='text-xl font-bold'>Total</p>
+                                    <p className='text-2xl font-extrabold'>&#8377;{totalPrice}</p>
+                                </div>
+                                <button className='relative left-1/2 -translate-x-1/2 bg-blue-700 text-white p-3 px-5 rounded-2xl shadow-xl' onClick={handleCheckout}>Checkout</button>
                             </div>
-                            <hr />
-                            <div className='flex justify-between'>
-                                <p className='text-xl font-bold'>Total</p>
-                                <p className='text-2xl font-extrabold'>&#8377;{totalPrice}</p>
-                            </div>
-                            <button className='relative left-1/2 -translate-x-1/2 bg-blue-700 text-white p-3 px-5 rounded-2xl shadow-xl' onClick={handleCheckout}>Checkout</button>
                         </div>
-                    </div>
-                ):(
-                    <div className='text-center font-bold text-3xl'>
-                        Cart is Empty.
-                    </div>
-                )
-            }
-        </div>
+                    ) : (
+                        <div className='text-center font-bold text-3xl'>
+                            Cart is Empty.
+                        </div>
+                    )
+                }
+            </div>
+        </>
     )
 }
 

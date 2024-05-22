@@ -19,6 +19,11 @@ import OrderHistory from './pages/user/Order/OrderHistory'
 import Category from './pages/user/Category'
 import SearchResult from './pages/user/SearchResult'
 import BookDetail from './pages/user/BookDetail'
+import PersonalInfo from './components/user/profile/PersonalInfo'
+import ManageAddress from './components/user/profile/ManageAddress'
+import MyReviews from './components/user/profile/MyReviews'
+import MyCoupons from './components/user/profile/MyCoupons'
+import ProfileLayout from './pages/user/ProfileLayout'
 function App() {
 
   const [user, dispatchUser] = useReducer(UserReducer, null)
@@ -66,6 +71,12 @@ function App() {
               <Route path='category/:categoryName' element={<Category />} />
               <Route path='search/:keyword' element={<SearchResult />} />
               <Route path='book/:bookID' element={<BookDetail />} />
+              <Route path='profile' element={<ProfileLayout />}>
+                <Route index element={<PersonalInfo/>}/>
+                <Route path='address' element={<ManageAddress/>}/>
+                <Route path='myreviews' element={<MyReviews/>}/>
+                <Route path='mycoupons' element={<MyCoupons/>}/>
+              </Route>
             </Route>
             <Route path='/user/login' element={<LoginPage />} />
             <Route path='/user/register' element={<Register />} />

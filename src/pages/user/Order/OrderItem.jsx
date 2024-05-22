@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
-import Image from "../../../assets/img.png"
 function OrderItem({ item }) {
+  console.log("item: ", item);
     return (
       <div className="flex flex-col items-start p-4 bg-white rounded shadow-sm border">
         <div className="text-xs text-gray-600 mb-2">{item.deliveredDate || "24 April 2024"}</div>
@@ -9,9 +9,9 @@ function OrderItem({ item }) {
         <div className="relative flex items-center">
           <div className="flex-shrink-0 w-24 h-24  mr-4 rounded">
             <img
-              src={Image}
+              src={`https://covers.openlibrary.org/b/isbn/${item.book.isbn}-L.jpg`}
               alt={item.book.title}
-              className=" object-cover w-20 h-full rounded-md"
+              className=" object-cover w-20 h-full rounded-md border"
             />
           </div>
           <div className="flex flex-col">

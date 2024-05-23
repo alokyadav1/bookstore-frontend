@@ -6,7 +6,7 @@ import { FaStar } from 'react-icons/fa6'
 
 function MyReviews() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"))
-  const [reviews, setReviews] = useState(review)
+  const [reviews, setReviews] = useState(null)
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -18,7 +18,7 @@ function MyReviews() {
       setReviews(res.data)
     }
 
-    // fetchReviews()
+    fetchReviews()
 
   }, [currentUser?.token])
 
@@ -27,18 +27,18 @@ function MyReviews() {
       <p className='text-xl'>My Reviews and Ratings</p>
       <div>
         {
-          reviews.length > 0 ? (
-            reviews.map((rev, index) => {
+          reviews?.length > 0 ? (
+            reviews?.map((rev, index) => {
               return (
-                <div key={index} className='border-b pb-2'>
-                  <div className='flex gap-2 p-2 rounded-md  w-2/3'>
-                    <div className='w-2/5 flex justify-center  items-center'>
-                      <div className='flex gap-x-2'>
+                <div key={index} className='flex justify-center pb-2'>
+                  <div className='flex gap-2 p-2 rounded-md  w-3/5  bg-slate-100 shadow-md'>
+                    <div className='w-1/4 flex justify-center gap-x-5 items-center'>
+                      <div className='flex gap-x-2 border'>
                         <img src={`https://covers.openlibrary.org/b/isbn/${rev.book.isbn}-L.jpg`} alt={rev.book.title} width={80} />
                         {/* <p>Book name</p> */}
                       </div>
                     </div>
-                    <div className=' w-3/5'>
+                    <div className=' w-3/4'>
                       <div className='flex items-center gap-x-3 mb-2'>
                         <div className='flex gap-x-1 items-center '>
                           {
@@ -51,7 +51,7 @@ function MyReviews() {
                       </div>
                       <q className='text-zinc-500 italic text-sm'>{rev.comment}</q>
                       <div>
-                        <button className=' text-sm border px-5 py-1 rounded-md shadow'>Delete</button>
+                        <button className='bg-red-600 text-white text-sm border px-5 py-1 rounded-full shadow'>Delete</button>
                       </div>
                     </div>
                   </div>

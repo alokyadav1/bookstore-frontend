@@ -9,7 +9,7 @@ function SideBar() {
     return (
         <>
             <aside>
-                <div className='flex gap-x-2 items-center bg-white p-2 rounded-md border'>
+                <div className='flex gap-x-2 items-center bg-white p-2 rounded-md '>
                     <div className='flex items-center justify-center text-white bg-blue-500 w-10 h-10 text-2xl rounded-full '>
                         <FaUser />
                     </div>
@@ -18,7 +18,7 @@ function SideBar() {
                         <p className='font-bold text-zinc-500'>Alok Yadav</p>
                     </div>
                 </div>
-                <div className='bg-white rounded-md border mt-2 text-zinc-500'>
+                <div className='bg-white rounded-md  mt-2 text-zinc-500'>
                     <Link to="/user/orderHistory" className='flex items-center justify-between  border-b p-2'>
                         <div className='flex items-center gap-x-2 text-lg'>
                             <BsFillHandbagFill className='text-blue-500 ' />
@@ -48,7 +48,7 @@ function SideBar() {
                         </div>
                     </div>
                 </div>
-                <div className='flex gap-x-2 items-center bg-white p-2 rounded-md border mt-2'>
+                <div className='flex gap-x-2 items-center bg-white p-2 rounded-md  mt-2'>
                     <div className='flex items-center justify-center text-white bg-red-500 w-8 h-8 text-lg rounded-full '>
                         <ImSwitch />
                     </div>

@@ -120,7 +120,7 @@ function OrderHistory() {
                           className="shrink-0 my-auto w-3 aspect-square"
                         />
                       </div>
-                      {order.orderDetail.map((item, index) => (
+                      {order.orderDetail?.map((item, index) => (
                         <OrderItem key={index} item={item} />
                       ))}
                     </div>

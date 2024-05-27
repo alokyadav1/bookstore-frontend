@@ -12,7 +12,7 @@ function ProfileLayout() {
                 <aside className=''>
                     <SideBar />
                 </aside>
-                <main className=' flex-1 rounded-md p-2 bg-white'>
+                <main className=' flex-1 rounded-md p-2 bg-white shadow-sm'>
                     <Outlet />
                 </main>
             </div>

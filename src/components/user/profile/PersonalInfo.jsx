@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import UserContext from '../../../context/UserContext'
 
 function PersonalInfo() {
+  const {user} = useContext(UserContext)
   const [infoEditable, setInfoEditable] = useState(false)
   const [emailEditable, setEmailEditable] = useState(false)
-  const [mobilEditable, setMobileEditable] = useState(false)
+  const [mobileEditable, setMobileEditable] = useState(false)
   return (
     <>
       <div className='py-4 px-2'>
@@ -72,7 +74,7 @@ function PersonalInfo() {
         </div>
         <form>
           <div className='w-2/5 flex gap-x-4'>
-            <input type="email" value={"alok@gmail.com"}
+            <input type="email" value={user?.email}
               className='p-2 rounded-md bg-slate-50 border w-full disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
               disabled={!emailEditable}
             />
@@ -87,7 +89,7 @@ function PersonalInfo() {
         <div className='mb-3 flex items-center gap-x-5 '>
           <h2 className='text-xl'>Mobile Number</h2>
           {
-            mobilEditable ? (
+            mobileEditable ? (
               <span className='text-sm text-blue-500 cursor-pointer' onClick={() => setMobileEditable(false)}>Cancel</span>
             ) : (
               <span className='text-sm text-blue-500 cursor-pointer' onClick={() => setMobileEditable(true)}>Edit</span>
@@ -98,10 +100,10 @@ function PersonalInfo() {
           <div className='w-2/5 flex gap-x-4 '>
             <input type="number" value={8104035439}
               className='p-2 rounded-md bg-slate-50 border w-full disabled:opacity-75 disabled:bg-slate-200 disabled:cursor-not-allowed'
-              disabled={!mobilEditable}
+              disabled={!mobileEditable}
             />
             {
-              mobilEditable && <button className='bg-blue-600 text-white p-1 px-4 rounded-md'>Save</button>
+              mobileEditable && <button className='bg-blue-600 text-white p-1 px-4 rounded-md'>Save</button>
             }
           </div>
         </form>

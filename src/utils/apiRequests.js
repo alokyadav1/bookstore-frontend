@@ -23,3 +23,4 @@ const request = {
 }
 
 export default request;
+export {header}

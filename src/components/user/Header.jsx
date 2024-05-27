@@ -77,7 +77,7 @@ const Header = () => {
                             <FaSearch />
                         </button>
                     </div>
-                    <div className='invisible group-hover:visible absolute top-full w-full bg-white rounded-xl max-h-96 overflow-auto'>
+                    <div className='invisible group-hover:visible absolute top-full w-full bg-white rounded-xl shadow-2xl max-h-96 overflow-auto'>
                         {
                             searchResult.length > 0 ? (
                                 <ul>

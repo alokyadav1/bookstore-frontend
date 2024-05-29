@@ -1,19 +1,45 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
+import axios from "../../../Axios/axios"
+import { header } from '../../../utils/apiRequests'
+import { showToast } from "../../../utils/toast"
+import { ToastContainer } from 'react-toastify'
 
-function AddressForm({ add, handleCancel, handleSubmit }) {
-    const [address,setAddress] = useState(add)
-
+function AddressForm({ add = null, handleCancel }) {
+    const [address, setAddress] = useState(add)
+    let resMsg = "";
     const handleInputChange = (e) => {
-        console.log(e.target.name,e.target.value);
-        setAddress({...address, [e.target.name]:e.target.value})
-        console.log(address);
+        setAddress({ ...address, [e.target.name]: e.target.value })
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("form: ", address);
+        if (add == null) { // add address
+            const res = await axios.post("/api/address/add", address, header)
+            if (res.status == 200) {
+                resMsg = "Address added successfully"
+                handleCancel()
+            } else {
+                resMsg = "Unable to add address"
+            }
+        } else { // update address
+            const res = await axios.patch("/api/address/update-address",address,header)
+            console.log("res: ",res);
+            if(res.status == 200){
+                handleCancel()
+                resMsg = "Address Updated Successfully"
+            } else {
+                resMsg = "Unable to update address"
+            }
+        }
+        showToast("resMsg")
+    }
 
     return (
         <div>
+            <ToastContainer />
             <form className='mt-3 space-y-3' onSubmit={handleSubmit}>
                 <div className='flex flex-wrap gap-x-5 '>
                     <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
@@ -77,10 +103,10 @@ function AddressForm({ add, handleCancel, handleSubmit }) {
                         <label htmlFor="state" className='text-xs text-gray-400 px-2 w-full'>State</label>
                         <select name="state" id="state" className='px-1 w-full rounded-md focus:outline focus:outline-blue-600' onChange={handleInputChange}>
                             <option value="null">Select State</option>
-                            <option value="MAH">Maharashtra</option>
+                            <option value="MAHARASHTRA">Maharashtra</option>
                             <option value="UP">Uttar Pradesh</option>
                             <option value="GOA">Goa</option>
-                            <option value="RAJ">Rajasthan</option>
+                            <option value="RAJASTHAN">Rajasthan</option>
                         </select>
                     </div>
 
@@ -88,12 +114,12 @@ function AddressForm({ add, handleCancel, handleSubmit }) {
                 </div>
 
                 <div className='flex flex-wrap gap-x-5'>
-                <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
+                    <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
                         <label htmlFor="landmark" className='text-xs text-gray-400 px-2 w-full'>Landmark (Optional)</label>
                         <input type="text" placeholder='' id='landmark' name='landmark'
                             className='px-2 w-full rounded-md outline-none' onChange={handleInputChange}
                             value={address?.landmark}
-                            
+
                         />
                     </div>
 
@@ -105,7 +131,7 @@ function AddressForm({ add, handleCancel, handleSubmit }) {
                         </div>
                         <div className='flex items-center gap-x-2'>
                             <label htmlFor="office">Office</label>
-                            <input type="radio" id='office' name='addressType' value="Office" onChange={handleInputChange}  />
+                            <input type="radio" id='office' name='addressType' value="Office" onChange={handleInputChange} />
                         </div>
                     </div>
                 </div>

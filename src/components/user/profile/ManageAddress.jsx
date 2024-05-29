@@ -29,9 +29,6 @@ function ManageAddress() {
     setShowAddressForm(false)
   } 
 
-  const handleSubmit = () => {
-    
-  }
 
   return (
     <div className='px-2'>
@@ -42,7 +39,7 @@ function ManageAddress() {
             showAddressForm ? (
               <div className='p-5 py-3 w-2/3'>
                 <p className='uppercase text-blue-600'>Add a New Address</p>
-                <AddressForm handleCancel={handleCancel} handleSubmit={handleSubmit} />
+                <AddressForm handleCancel={handleCancel} />
               </div>
             ) : (
               <div className='p-2 py-3 text-blue-600 flex items-center justify-start gap-x-2 cursor-pointer' onClick={() => setShowAddressForm(true)}>

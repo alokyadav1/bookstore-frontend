@@ -16,12 +16,12 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/auth/user/login", { email, password })
+      const res = await axios.post("/auth/user/login", { email, password, role:"USER" })
       console.log(res);
       console.log(res.status);
       if (res.status == 200) {
         localStorage.setItem("currentUser", JSON.stringify(res.data))
-        localStorage.setItem("userRole", "User")
+        localStorage.setItem("userRole", "USER")
         dispatchUser({
           type: "SET_USER",
           payload: res.data.user

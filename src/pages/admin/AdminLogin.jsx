@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import axios from "../../Axios/axios"
+import axios from "../../Axios/axios";
 
-const Register = () => {
+const AdminLogin = () => {
   const navigate = useNavigate();
   const { dispatchUser } = useContext(UserContext);
-  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,16 +16,17 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/auth/user/register", {username, email, password,role:"USER" })
-      console.log("register res: ", res);
+      const res = await axios.post("/auth/user/login", { email, password, role:"ADMIN" })
+      console.log(res);
+      console.log(res.status);
       if (res.status == 200) {
-        localStorage.setItem("currentUser", JSON.stringify(res.data))
-        localStorage.setItem("userRole", "User")
+        localStorage.setItem("admin", JSON.stringify(res.data))
+        localStorage.setItem("userRole", "ADMIN")
         dispatchUser({
           type: "SET_USER",
           payload: res.data.user
         })
-        navigate("/dashboard")
+        navigate("/admin")
       }
     } catch (error) {
       console.log(error.response.status);
@@ -34,35 +34,21 @@ const Register = () => {
       setLoading(false)
     }
     setLoading(false);
+
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div className="flex flex-col">
+        <div className="w-full flex flex-col">
           {error && <span className="text-center w-full text-red-500 text-sm font-bold">{error}</span>}
           <h2 className=" text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+            Sign in to your account
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm space-y-5">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -97,24 +83,36 @@ const Register = () => {
             </div>
           </div>
 
+          <div className="flex items-center justify-between">
+
+            <div className="text-sm">
+              <a
+                href="#"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-progress"
               disabled={loading}
             >
-              Sign Up
+              Sign in
             </button>
           </div>
         </form>
         <div className="text-sm text-center">
           <p className="text-gray-600">
-            Already have an Account?{" "}
+            New user?{" "}
             <Link
-              to="/user/login"
+              to="/user/register"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              Login
+              Create an account
             </Link>
           </p>
         </div>
@@ -123,4 +121,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default AdminLogin;

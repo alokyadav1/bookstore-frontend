@@ -23,7 +23,7 @@ function UserDashBoard() {
     const fetchCart = async() => {
       const res = await axios.get("/api/cart/get-cart",{
         headers:{
-          Authorization:`Bearer ${currentUser.token}`
+          Authorization:`Bearer ${currentUser?.token}`
         }
       })
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { FaBuilding, FaEllipsisVertical } from 'react-icons/fa6'
 import AddressForm from './AddressForm'
+import { ToastContainer } from 'react-toastify'
 
 function AddressCard({ address }) {
     const [showMoreOptions, setShowMoreOptions] = useState(false)
@@ -16,21 +17,20 @@ function AddressCard({ address }) {
 
     const handleCancel = () => {
         setShowEditForm(false)
-        showMoreOptions(false)
+        // showMoreOptions(false)
     }
 
-    const handleSubmit = () => {
 
-    }
 
     return (
         <>
+        <ToastContainer/>
             {
                 showEditForm ? (
                     <div className={`border p-5 py-3 w-full ${showEditForm && 'bg-slate-50'}`}>
                         <div className=' w-2/3'>
                             <p className='uppercase text-blue-600'>Edit Address</p>
-                            <AddressForm add={address} handleCancel={handleCancel} handleSubmit={handleSubmit} />
+                            <AddressForm add={address} handleCancel={handleCancel} />
                         </div>
                     </div>
                 ) : (

@@ -24,6 +24,14 @@ import ManageAddress from './components/user/profile/ManageAddress'
 import MyReviews from './components/user/profile/MyReviews'
 import MyCoupons from './components/user/profile/MyCoupons'
 import ProfileLayout from './pages/user/ProfileLayout'
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDash from './pages/admin/AdminDash'
+import Users from './pages/admin/Users'
+import Books from './pages/admin/Books'
+import Orders from './pages/admin/Orders'
+import Coupons from './pages/admin/Coupons'
+
 function App() {
 
   const [user, dispatchUser] = useReducer(UserReducer, null)
@@ -50,9 +58,9 @@ function App() {
 
   }, [])
 
-  const ProtectedUrl = ({ children }) => {
-    if (userRole !== "User") {
-      return <Navigate to="/user/login" />
+  const ProtectedAdmin = ({ children }) => {
+    if (userRole !== "ADMIN") {
+      return <Navigate to="/admin/login" />
     }
     return children;
   }
@@ -72,14 +80,25 @@ function App() {
               <Route path='search/:keyword' element={<SearchResult />} />
               <Route path='book/:bookID' element={<BookDetail />} />
               <Route path='profile' element={<ProfileLayout />}>
-                <Route index element={<PersonalInfo/>}/>
-                <Route path='address' element={<ManageAddress/>}/>
-                <Route path='myreviews' element={<MyReviews/>}/>
-                <Route path='mycoupons' element={<MyCoupons/>}/>
+                <Route index element={<PersonalInfo />} />
+                <Route path='address' element={<ManageAddress />} />
+                <Route path='myreviews' element={<MyReviews />} />
+                <Route path='mycoupons' element={<MyCoupons />} />
               </Route>
             </Route>
+
+            <Route path='/admin' element={<ProtectedAdmin><AdminLayout /></ProtectedAdmin>}>
+              <Route index element={<AdminDash />} />
+              <Route path='users' element={<Users />} />
+              <Route path='books' element={<Books />} />
+              <Route path='orders' element={<Orders />} />
+              <Route path='coupons' element={<Coupons />} />
+            </Route>
+
+
             <Route path='/user/login' element={<LoginPage />} />
             <Route path='/user/register' element={<Register />} />
+            <Route path='/admin/login' element={<AdminLogin/>} />
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>

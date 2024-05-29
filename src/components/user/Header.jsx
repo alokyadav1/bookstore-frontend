@@ -14,16 +14,20 @@ const Header = () => {
     const [isInputFocused, setIsInputFocused] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const userRole = localStorage.getItem("userRole")
     const { user, dispatchUser } = useContext(UserContext)
     const { cart } = useContext(AppContext)
 
 
+    
+
     useEffect(() => {
+        
         const getSearchResult = async (search) => {
             if (search.length > 0) {
                 const res = await axios.get(`/api/search/searchByTitleOrAuthor/${search}`, {
                     headers: {
-                        Authorization: `Bearer ${currentUser.token}`
+                        Authorization: `Bearer ${currentUser?.token}`
                     }
                 })
                 return res.data
@@ -40,7 +44,7 @@ const Header = () => {
         const inputChange = setTimeout(handleInputChange, 1000)
 
         return () => clearTimeout(inputChange)
-    }, [currentUser.token, keyword])
+    }, [currentUser?.token, keyword])
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -56,7 +60,14 @@ const Header = () => {
         })
         localStorage.removeItem("currentUser");
         localStorage.removeItem("userRole");
-        navigate("/user/register")
+        navigate("/user/login")
+    }
+
+    if (userRole == "ADMIN") {
+        dispatchUser({
+            type: "LOGOUT"
+        })
+        localStorage.removeItem("currentUser");
     }
 
     return (

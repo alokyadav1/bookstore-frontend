@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Quantity from './Quantity';
 
-const BookCard = ({ book, bookQuantity,handleClick }) => {
+const BookCard = ({ book, bookQuantity, handleClick }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext)
     const { cart, dispatchCart } = useContext(AppContext);
@@ -77,7 +77,9 @@ const BookCard = ({ book, bookQuantity,handleClick }) => {
                 to={`/user/book/${book.bookID}`}
             >
                 <div onClick={handleClick}>
-                    <img className="w-32 h-48 rounded mx-auto" src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`||Image} alt={book.title} />
+                    <div className=" w-32 h-48 mb-4 bg-gray-200 shadow-lg rounded overflow-hidden mx-auto">
+                        <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={`${book.title} cover`} className="w-full h-48 object-cover rounded mb-4" />
+                    </div>
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">{book.title}</div>
                         <p className="text-gray-500 text-base italic">{book.description}</p>

@@ -18,9 +18,6 @@ const Header = () => {
     const { user, dispatchUser } = useContext(UserContext)
     const { cart } = useContext(AppContext)
 
-
-    
-
     useEffect(() => {
         
         const getSearchResult = async (search) => {

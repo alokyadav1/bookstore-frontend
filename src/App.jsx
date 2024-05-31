@@ -36,13 +36,14 @@ function App() {
 
   const [user, dispatchUser] = useReducer(UserReducer, null)
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const admin = JSON.parse(localStorage.getItem("admin"));
   const userRole = localStorage.getItem("userRole")
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = async (token) => {
       const res = await axios.get("/api/user/get-user", {
         headers: {
-          Authorization: `Bearer ${currentUser?.token}`
+          Authorization: `Bearer ${token}`
         }
       })
       console.log("app res: ", res);
@@ -53,15 +54,23 @@ function App() {
     }
 
     if (currentUser?.token != null) {
-      fetchUser()
+      fetchUser(currentUser?.token)
+    } else if (admin?.token != null) {
+      fetchUser(admin?.token)
     }
 
   }, [])
 
   const ProtectedAdmin = ({ children }) => {
-    if (userRole !== "ADMIN") {
-      return <Navigate to="/admin/login" />
+    const storedRole = localStorage.getItem('userRole');
+    const storedUser = localStorage.getItem('admin');
+
+    if (storedRole !== 'ADMIN' || !storedUser) {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('admin');
+      return <Navigate to="/admin/login" />;
     }
+
     return children;
   }
   return (
@@ -88,7 +97,7 @@ function App() {
             </Route>
 
             <Route path='/admin' element={<ProtectedAdmin><AdminLayout /></ProtectedAdmin>}>
-              <Route index element={<AdminDash />} />
+              <Route path='' element={<AdminDash />} />
               <Route path='users' element={<Users />} />
               <Route path='books' element={<Books />} />
               <Route path='orders' element={<Orders />} />
@@ -98,7 +107,7 @@ function App() {
 
             <Route path='/user/login' element={<LoginPage />} />
             <Route path='/user/register' element={<Register />} />
-            <Route path='/admin/login' element={<AdminLogin/>} />
+            <Route path='/admin/login' element={<AdminLogin />} />
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>

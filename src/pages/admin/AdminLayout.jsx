@@ -1,47 +1,64 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
-import { BiLogOutCircle } from 'react-icons/bi'
-import { FaCircleUser } from 'react-icons/fa6'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import React, { useEffect, useReducer, useState } from 'react'
+import { Outlet } from 'react-router-dom'
+import AdminSideBar from '../../components/admin/AdminSideBar'
+import BookReducer from '../../reducer/BookReducer'
+import AdminContext from '../../context/AdminContext'
+import axios from "../../Axios/axios"
+import UserListReducer from '../../reducer/UserListReducer'
 
 function AdminLayout() {
+    const [books, dispatchBooks] = useReducer(BookReducer)
+    const [userList, dispatchUserList] = useReducer(UserListReducer)
+    const [orderList,setOrderList] = useState([])
+
+    const admin = JSON.parse(localStorage.getItem("admin"))
+
+    useEffect(() => {
+        const fetchBook = async () => {
+            const res = await axios.get("/api/book/all-books");
+            dispatchBooks({
+                type: "SET_BOOK",
+                payload: res.data
+            })
+        }
+
+        const fetchUsers = async () => {
+            const res = await axios.get("api/user/get-all-users",{
+                headers:{
+                    Authorization:`Bearer ${admin?.token}`
+                }
+            });
+            dispatchUserList({
+                type: "SET_USER_LIST",
+                payload: res.data
+            })
+        }
+
+        const fetchOrders = async () => {
+            const res = await axios.get("/api/orders/get-all-orders", {
+              headers: {
+                Authorization: `Bearer ${admin?.token}`
+              }
+            })
+            setOrderList(res.data)
+          }
+      
+        fetchBook()
+        fetchUsers()
+        fetchOrders()
+    }, [admin?.token])
     return (
         <>
-            <div className='flex gap-x-2'>
-                <aside className='flex flex-col justify-between py-2 min-h-screen min-w-64 space-y-2'>
-                    <div className='border bg-zinc-600 text-white p-2 py-5 rounded-md shadow-md flex items-center gap-x-2'>
-                        <FaCircleUser className='text-2xl' />
-                        <div>
-                            <p className='text-sm opacity-80'>Welcome, </p>
-                            <p>Admin</p>
-                        </div>
-                    </div>
-                    <ul id='admin-sidebar' className='border flex-grow bg-blue-600 text-white p-2 rounded-md shadow-md space-y-1'>
-                        <li className='rounded-md'>
-                            <NavLink to="/admin" className="block w-full p-2 rounded-md hover:bg-sky-500 " end>DashBoard</NavLink>
-                        </li>
-                        <li className='rounded-md'>
-                            <NavLink to="/admin/users" className="block w-full p-2 rounded-md hover:bg-sky-500">Users</NavLink>
-                        </li>
-                        <li className='rounded-md'>
-                            <NavLink to="/admin/books" className="block w-full p-2 rounded-md hover:bg-sky-500">Books</NavLink>
-                        </li>
-                        <li className='rounded-md'>
-                            <NavLink to="/admin/orders" className="block w-full p-2 rounded-md hover:bg-sky-500">Orders</NavLink>
-                        </li>
-                        <li className='rounded-md'>
-                            <NavLink to="/admin/coupons" className="block w-full p-2 rounded-md hover:bg-sky-500">Coupons</NavLink>
-                        </li>
-                    </ul>
-                    <div className='flex items-center gap-x-2 border bg-red-600 text-white px-2 rounded-md shadow-md '>
-                        <BiLogOutCircle className='text-xl'/>
-                        <button className='py-3'>Logout</button>
-                    </div>
-                </aside>
-                <main className='border min-h-screen flex-grow bg-slate-50 rounded-md p-2 max-h-screen overflow-auto'>
-                    <Outlet />
-                </main>
-            </div>
+            <AdminContext.Provider value={{ books, dispatchBooks, userList, dispatchUserList, orderList }}>
+                <div className='flex gap-x-2'>
+                    <AdminSideBar />
+                    <main className='border min-h-screen flex-grow bg-slate-50 rounded-md p-2 max-h-screen overflow-auto'>
+                        <Outlet />
+                    </main>
+                </div>
+            </AdminContext.Provider>
+
         </>
     )
 }

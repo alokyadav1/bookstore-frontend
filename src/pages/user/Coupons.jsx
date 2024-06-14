@@ -9,7 +9,6 @@ function Coupons({ appliedCoupon, totalPrice }) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const [coupon, setCoupon] = useState(null)
     const [couponCode, setCouponCode] = useState("")
-    const [showConfetti, setShowConfetti] = useState(false)
 
     const handleApplyCoupon = async (e) => {
         e.preventDefault()
@@ -22,9 +21,8 @@ function Coupons({ appliedCoupon, totalPrice }) {
             let discount = (totalPrice * res.data.discount) / 100
             if (discount > res.data.maxDiscount) discount = res.data.maxDiscount
             setCoupon(res.data)
-            setShowConfetti(true)
             setCouponCode("")
-            appliedCoupon({coupon,discount:discount})
+            appliedCoupon({coupon:res.data,discount:discount})
 
         } catch (error) {
             console.log("error");

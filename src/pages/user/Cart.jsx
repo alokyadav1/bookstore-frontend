@@ -13,6 +13,7 @@ function Cart() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     const navigate = useNavigate()
     const { cart, dispatchCart } = useContext(AppContext)
+    const [shippingCharge, setShippingCharge] = useState(49)
     const [isExpanded, setIsExpanded] = useState(false)
     // const cart = [
     //     {
@@ -105,7 +106,7 @@ function Cart() {
                                     }
                                     <div className='flex justify-between'>
                                         <p>Shipping</p>
-                                        <p className='font-bold'>Free</p>
+                                        <p className='font-bold'>&#8377;{shippingCharge}</p>
                                     </div>
                                 </div>
                                 <hr />
@@ -116,7 +117,7 @@ function Cart() {
                                 <hr />
                                 <div className='flex justify-between'>
                                     <p className='text-xl font-bold'>Total</p>
-                                    <p className='text-2xl font-extrabold'>&#8377;{totalPrice}</p>
+                                    <p className='text-2xl font-extrabold'>&#8377;{totalPrice + shippingCharge}</p>
                                 </div>
                                 <button className='relative left-1/2 -translate-x-1/2 bg-blue-700 text-white p-3 px-5 rounded-2xl shadow-xl' onClick={handleCheckout}>Checkout</button>
                             </div>

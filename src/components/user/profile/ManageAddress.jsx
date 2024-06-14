@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { address } from '../../../data/address'
 import AddressCard from './AddressCard';
 import request from '../../../utils/apiRequests';
@@ -7,28 +7,19 @@ import { header } from '../../../utils/apiRequests';
 import axios from "../../../Axios/axios"
 import { FaCirclePlus, FaPlus } from 'react-icons/fa6';
 import AddressForm from './AddressForm';
+import AddressContext from '../../../context/AddressContext';
 
 function ManageAddress() {
-  const [addresses, setAddresses] = useState([]);
+  const { addresses, loading } = useContext(AddressContext)
   const [showAddressForm, setShowAddressForm] = useState(false)
-
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const res = await axios.get("/api/address/get-user-address", header)
-        console.log("address: ", res?.data);
-        setAddresses(res.data)
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchAddresses()
-  }, [])
 
   const handleCancel = () => {
     setShowAddressForm(false)
-  } 
+  }
 
+  if(loading){
+    return <h1>Loading...</h1>
+  }
 
   return (
     <div className='px-2'>

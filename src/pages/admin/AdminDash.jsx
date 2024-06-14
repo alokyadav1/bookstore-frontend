@@ -42,7 +42,7 @@ function AdminDash() {
         ))}
       </div>
       <div>
-        <div className='w-3/4 border rounded shadow-lg px-2 mx-4'>
+        <div className='w-1/2 border rounded shadow-lg px-2 mx-4'>
           <BooksBarChart inputData={books} />
         </div>
       </div>

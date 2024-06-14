@@ -24,14 +24,14 @@ function PersonalInfo() {
           <div className='flex gap-x-5 '>
             <div className='flex flex-col '>
               <label htmlFor="firstName" className='text-sm text-slate-500'>First Name</label>
-              <input type="text" name="firstName" id='firstName' value="Alok"
+              <input type="text" name="firstName" id='firstName' value={user?.firstName}
                 className='p-2 rounded-md bg-slate-50 border disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
                 disabled={!infoEditable}
               />
             </div>
             <div className='flex flex-col '>
               <label htmlFor="lastName" className='text-sm text-slate-500'>Last Name</label>
-              <input type="text" id='lastName' value="Yadav"
+              <input type="text" id='lastName' value={user?.lastName}
                 className='p-2 rounded-md bg-slate-50 border disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
                 disabled={!infoEditable}
               />
@@ -42,11 +42,11 @@ function PersonalInfo() {
             <p className='text-sm text-slate-500'>Your Gender</p>
             <div className={`flex gap-x-5`}>
               <div className='space-x-1 '>
-                <input type="radio" value={"MALE"} name='gender' id='male' checked disabled={!infoEditable} />
+                <input type="radio" value={"MALE"} name='gender' id='male' checked={user?.gender == "MALE"} disabled={!infoEditable} />
                 <label htmlFor="male">Male</label>
               </div>
               <div className='space-x-1'>
-                <input type="radio" value={"FEMALE"} name='gender' id='female' disabled={!infoEditable} />
+                <input type="radio" value={"FEMALE"} name='gender' id='female' checked={user?.gender == "FEMALE"} disabled={!infoEditable} />
                 <label htmlFor="female">Female</label>
               </div>
             </div>
@@ -98,7 +98,7 @@ function PersonalInfo() {
         </div>
         <form>
           <div className='w-2/5 flex gap-x-4 '>
-            <input type="number" value={8104035439}
+            <input type="number" value={user?.mobileNumber}
               className='p-2 rounded-md bg-slate-50 border w-full disabled:opacity-75 disabled:bg-slate-200 disabled:cursor-not-allowed'
               disabled={!mobileEditable}
             />

@@ -11,16 +11,18 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale,
+ChartJS.register(
+  CategoryScale,
   LinearScale,
-  BarElement,
+  ArcElement,
   Title,
   Tooltip,
-  Legend);
+  Legend
+);
 
-function BooksBarChart({ inputData, role }) {
+function BooksPieChart({ inputData, role }) {
   const categories = {}
 
   inputData?.forEach(book => {
@@ -34,8 +36,16 @@ function BooksBarChart({ inputData, role }) {
       {
         label: "Count",
         data: Object.values(categories),
-        backgroundColor: "#AA00FF",
-        barThickness:30,
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#AA00FF",
+          "#00FFAA",
+          "#FFAA00",
+        ],
+        borderWidth: 1,
+        borderColor: "#FFFFFF",
       },
     ],
   };
@@ -47,17 +57,20 @@ function BooksBarChart({ inputData, role }) {
         text: `Books by category`,
       },
       legend: {
-        display: false, // Hide legend for a cleaner look
+        display: true, // Display legend for the pie chart
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            return `${label}: ${value}`;
+          },
+        },
       },
     },
-    cornerRadius: 40, // Reduce border radius for a more subtle effect
-    borderWidth: 1, // Increase border width for a bolder appearance
-    borderColor: "#FFFFFF", // Set border color to white for contrast
-    
-    
   };
-  return <Bar data={data} options={options} />;
+  return <Pie data={data} options={options} />;
 }
 
-export default BooksBarChart;
-
+export default BooksPieChart;

@@ -31,6 +31,8 @@ import Users from './pages/admin/Users'
 import Books from './pages/admin/Books'
 import Orders from './pages/admin/Orders'
 import Coupons from './pages/admin/Coupons'
+import UserNotVerified from './pages/user/UserNotVerified'
+import EmailVerificationSuccess from './pages/user/EmailVerificationSuccess'
 
 function App() {
 
@@ -46,7 +48,6 @@ function App() {
           Authorization: `Bearer ${token}`
         }
       })
-      console.log("app res: ", res);
       dispatchUser({
         type: "SET_USER",
         payload: res.data.user
@@ -107,6 +108,8 @@ function App() {
 
             <Route path='/user/login' element={<LoginPage />} />
             <Route path='/user/register' element={<Register />} />
+            <Route path='/user/not-verified' element={<UserNotVerified />} />
+            <Route path='/user/verify/:token' element={<EmailVerificationSuccess />} />
             <Route path='/admin/login' element={<AdminLogin />} />
           </Routes>
         </BrowserRouter>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useReducer } from 'react'
 import { Outlet } from 'react-router-dom'
@@ -5,6 +6,7 @@ import BookReducer from '../../reducer/BookReducer'
 import AppContext from '../../context/AppContext'
 import axios from "../../Axios/axios"
 import cartReducer from '../../reducer/CartReducer'
+import { AddressProvider } from '../../context/AddressContext'
 
 function UserDashBoard() {
   const [books, dispatchBook] = useReducer(BookReducer, null)
@@ -20,20 +22,20 @@ function UserDashBoard() {
       })
     }
 
-    const fetchCart = async() => {
-      const res = await axios.get("/api/cart/get-cart",{
-        headers:{
-          Authorization:`Bearer ${currentUser?.token}`
+    const fetchCart = async () => {
+      const res = await axios.get("/api/cart/get-cart", {
+        headers: {
+          Authorization: `Bearer ${currentUser?.token}`
         }
       })
 
       const userCart = res.data.map(item => {
-        return {book: item.book, quantity:item.quantity}
+        return { book: item.book, quantity: item.quantity }
       })
 
       dispatchCart({
-        type:"SET_CART",
-        payload:userCart
+        type: "SET_CART",
+        payload: userCart
       })
 
       console.log("user cart:", userCart);
@@ -46,10 +48,13 @@ function UserDashBoard() {
 
 
   return (
-    <AppContext.Provider value={{books, dispatchBook, cart, dispatchCart}}>
-      <>
-        <Outlet />
-      </>
+    <AppContext.Provider value={{ books, dispatchBook, cart, dispatchCart }}>
+      <AddressProvider>
+        <>
+          <Outlet />
+        </>
+      </AddressProvider>
+
     </AppContext.Provider>
 
   )

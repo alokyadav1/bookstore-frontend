@@ -2,14 +2,11 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import axios from "../../Axios/axios"
+import axios from "../../Axios/axios";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { dispatchUser } = useContext(UserContext);
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', mobileNumber: '', gender: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,21 +14,14 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/auth/user/register", {username, email, password,role:"USER" })
-      console.log("register res: ", res);
-      if (res.status == 200) {
-        localStorage.setItem("currentUser", JSON.stringify(res.data))
-        localStorage.setItem("userRole", "User")
-        dispatchUser({
-          type: "SET_USER",
-          payload: res.data.user
-        })
-        navigate("/dashboard")
+      const res = await axios.post("/auth/user/register", { ...formData, role: "USER" });
+      if (res.status === 200) {
+        navigate("/user/not-verified");
       }
     } catch (error) {
-      console.log(error.response.status);
-      setError(error.response.data)
-      setLoading(false)
+      const errorMessage = error.response?.data?.message || "An error occurred. Please try again.";
+      setError(errorMessage);
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -48,20 +38,62 @@ const Register = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm space-y-5">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+            <div className="flex gap-x-2 ">
+              <div className="flex-grow">
+                <label htmlFor="firstName" className="sr-only">
+                  FirstName
+                </label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  required
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="First Name"
+                  value={formData?.firstName}
+                  onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+                />
+              </div>
+              <div className="flex-grow">
+                <label htmlFor="lastName" className="sr-only">
+                  Last Name
+                </label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  required
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Last Name"
+                  value={formData?.lastName}
+                  onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-x-2 ">
+              <div className="flex gap-x-2 flex-grow">
+                <label htmlFor="gender" className="text-slate-500">Gender</label>
+                <div className="space-x-2 flex-grow text-center">
+                  <label htmlFor="male">
+                    <input type="radio" name="gender" id="male" value="MALE"
+                      onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })} /> Male
+                  </label>
+                  <label htmlFor="female">
+                    <input type="radio" name="gender" id="female" value="FEMALE"
+                      onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })} /> Female
+                  </label>
+                </div>
+              </div>
+              <div className="flex-grow">
+                <label htmlFor="mobile" className="sr-only">Mobile</label>
+                <input type="number" id="mobile"
+                  value={formData?.mobileNumber}
+                  name="mobileNumber"
+                  placeholder="Mobile Number"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+                />
+              </div>
             </div>
             <div>
               <label htmlFor="email-address" className="sr-only">
@@ -75,8 +107,8 @@ const Register = () => {
                 required
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData?.email}
+                onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
               />
             </div>
             <div>
@@ -91,8 +123,8 @@ const Register = () => {
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData?.password}
+                onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
               />
             </div>
           </div>
@@ -100,7 +132,7 @@ const Register = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-35 disabled:cursor-not-allowed"
               disabled={loading}
             >
               Sign Up

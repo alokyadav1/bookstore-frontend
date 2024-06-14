@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useContext } from 'react'
 import { FaChevronRight, FaUser } from 'react-icons/fa'
 import { BsFillHandbagFill } from 'react-icons/bs'
 import { Link, NavLink } from 'react-router-dom'
 import { RiFolderUserFill, RiUserSettingsFill } from 'react-icons/ri'
 import { ImSwitch } from 'react-icons/im'
+import UserContext from '../../../context/UserContext'
 function SideBar() {
+    const {user} = useContext(UserContext)
     return (
         <>
             <aside>
@@ -15,7 +17,7 @@ function SideBar() {
                     </div>
                     <div className=''>
                         <span className='text-xs text-zinc-400'>Hello,</span>
-                        <p className='font-bold text-zinc-500'>Alok Yadav</p>
+                        <p className='font-bold text-zinc-500'>{user?.firstName}</p>
                     </div>
                 </div>
 
@@ -33,7 +35,7 @@ function SideBar() {
                             <p>Account Setting</p>
                         </div>
                         <div className='flex flex-col text-black'>
-                            <NavLink to="" className='py-2 px-6 hover:bg-slate-50 hover:text-blue-500 rounded-md'>Personal Information</NavLink>
+                            <NavLink to="" className='py-2 px-6 hover:bg-slate-50 hover:text-blue-500 rounded-md' end>Personal Information</NavLink>
                             <NavLink to="address" className='py-2 px-6 hover:bg-slate-50 hover:text-blue-500 rounded-md'>Manage Addresses</NavLink>
                         </div>
                     </div>

@@ -6,17 +6,18 @@ import { ConfirmModal } from '../../components/admin/ConfirmModal';
 import { showToast } from '../../utils/toast';
 import { ToastContainer } from 'react-toastify';
 import AdminContext from '../../context/AdminContext';
+import FullScreenModal from '../../components/admin/Modal';
+import AdminRegisterForm from '../../components/admin/AdminRegisterForm';
+import GoogleForm from '../../components/admin/AdminRegisterForm';
 
 function Users() {
     const { user } = useContext(UserContext)
     const { userList } = useContext(AdminContext)
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState('')
-    const [openModal, setOpenModal] = useState(false)
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const handleEdit = (userID) => {
         console.log('Edit user with ID:', userID);
-        setOpenModal(true)
         // Implement the logic to edit the user details
     };
 
@@ -24,23 +25,37 @@ function Users() {
         // setUsers(users?.filter(user => user.userID !== userID));
     };
 
-    const handleConfirm = (confirm) => {
-        showToast(`User clicked ${confirm}`)
-        console.log("confirm", confirm);
-        setOpenModal(false)
-    }
-
     const filteredUsers = userList?.filter(user =>
         (filter === '' || user.role === filter) &&
-        (user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user?.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.email.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+
+
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleAdminRegistration = () => {
+        closeModal()
+        showToast("Admin added successfully.")
+    }
 
     return (
         <>
             <ToastContainer />
+            <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
+                <AdminRegisterForm onSuccess={handleAdminRegistration}/>
+            </FullScreenModal>
             <div className="container mx-auto p-4">
-                <h1 className="text-2xl font-bold mb-4">Users</h1>
+                <div className='flex items-center justify-between mb-4'>
+                    <h1 className="text-2xl font-bold">Users</h1>
+                    <button
+                        className='bg-blue-600 text-white p-2 rounded hover:bg-blue-500'
+                        onClick={openModal}>
+                        Add Admin
+                    </button>
+                </div>
                 <div className="mb-4 flex justify-between">
                     <input
                         type="text"
@@ -73,7 +88,7 @@ function Users() {
 
             </div>
             {
-                openModal && <ConfirmModal handleConfirm={handleConfirm} />
+                // openModal && <ConfirmModal handleConfirm={handleConfirm} />
             }
 
         </>

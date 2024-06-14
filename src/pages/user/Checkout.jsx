@@ -13,12 +13,17 @@ import { showToast } from "../../utils/toast"
 import axios from "../../Axios/axios"
 import ConfettiComponent from "../../components/ConfettiComponent";
 import { ToastContainer, toast } from "react-toastify";
-import { FaArrowUpLong } from "react-icons/fa6";
+import { FaArrowUpLong, FaBuilding } from "react-icons/fa6";
+import AddressContext from "../../context/AddressContext";
+import AddressCard from "../../components/user/profile/AddressCard";
+import { AiFillHome } from "react-icons/ai";
 
 const CheckoutPage = () => {
     const navigate = useNavigate()
     const { user } = useContext(UserContext)
     const { dispatchCart } = useContext(AppContext)
+    const { addresses } = useContext(AddressContext)
+    const [shippingAddress, setShippingAddress] = useState(addresses.at(0))
     const [cartItem, setCartItem] = useState(null)
     const [coupon, setCoupon] = useState(null)
     const [couponCode, setCouponCode] = useState("")
@@ -34,6 +39,7 @@ const CheckoutPage = () => {
         setCartItem(location.state.cart)
     }, [location.state.cart])
 
+    console.log("shipping address", shippingAddress);
     const handlePlaceOrder = async () => {
         const book = cartItem?.map(item => {
             return {
@@ -43,7 +49,7 @@ const CheckoutPage = () => {
         })
 
         const res = await axios.post("/api/orders/save-order", {
-            totalAmount: totalPrice + shippingCharge - discountAmount, books: book
+            totalAmount: totalPrice + shippingCharge - discountAmount, books: book, couponId: coupon?.couponID
         }, {
             headers: {
                 Authorization: `Bearer ${currentUser.token}`
@@ -283,42 +289,33 @@ const CheckoutPage = () => {
                                 placeholder="CVC"
                             />
                         </div>
-                        <label
-                            htmlFor="billing-address"
-                            className="mt-4 mb-2 block text-sm font-medium"
-                        >
-                            Billing Address
-                        </label>
-                        <div className="flex flex-col sm:flex-row">
-                            <div className="relative flex-shrink-0 sm:w-7/12">
-                                <input
-                                    type="text"
-                                    id="billing-address"
-                                    name="billing-address"
-                                    className="w-full rounded-md border border-gray-300 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                                    placeholder="Street Address"
-                                />
-                                <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                                    <img
-                                        className="h-4 w-4 object-contain"
-                                        src="https://flagpack.xyz/_nuxt/4c829b6c0131de7162790d2f897a90fd.svg"
-                                        alt=""
-                                    />
+                        {/* shipping address */}
+                        <div className="py-2">
+                            <h2 className="py-2">Shipping Address</h2>
+                            <div className="p-2 border-2 border-blue-500 rounded-md shadow cursor-pointer">
+                                <div className="flex gap-x-2 items-center">
+                                    <div className=' relative flex items-center justify-between'>
+                                        <div className='flex items-center gap-x-1 p-1 px-1  text-zinc-500 rounded-md bg-slate-200 w-fit'>
+                                            <AiFillHome />
+                                            <p className='border w-fit text-sm'>{shippingAddress?.addressType}</p>
+                                        </div>
+                                    </div>
+                                    <p className=" mb-2 flex gap-x-5 font-bold pt-2 text-slate-600">
+                                        <span>{shippingAddress?.name}</span>
+                                        <span>{shippingAddress?.mobileNo}</span>
+                                    </p>
+                                </div>
+                                <div className='flex items-center gap-x-2 text-zinc-500'>
+                                    <FaBuilding />
+                                    <p className='text-zinc-500'>
+                                        <span>{shippingAddress?.building}, </span>
+                                        <span>{shippingAddress?.street}, </span>
+                                        <span>{shippingAddress?.city}, </span>
+                                        <span>{shippingAddress?.state} - </span>
+                                        <span className='font-bold'>{shippingAddress?.pinCode} </span>
+                                    </p>
                                 </div>
                             </div>
-                            <select
-                                type="text"
-                                name="billing-state"
-                                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                            >
-                                <option value="State">State</option>
-                            </select>
-                            <input
-                                type="text"
-                                name="billing-zip"
-                                className="flex-shrink-0 rounded-md border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                                placeholder="ZIP"
-                            />
                         </div>
                         {/* Total */}
                         <div className="mt-6 border-t border-b py-2">

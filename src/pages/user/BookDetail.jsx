@@ -16,6 +16,9 @@ import DeleteModal from '../../components/user/Review/DeleteModal';
 import Header from "../../components/user/Header"
 import BookSuggestion from '../../components/user/BookSuggestion';
 import { comment } from 'postcss';
+import { IoNotifications } from 'react-icons/io5';
+import FullScreenModal from '../../components/admin/Modal';
+import NotifyMe from '../../components/user/NotifyMe';
 
 // handle add to cart
 function BookDetail() {
@@ -25,6 +28,7 @@ function BookDetail() {
     const { user } = useContext(UserContext)
     const [quantity, setQuantity] = useState(1)
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [rating, setRating] = useState(0)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const [reviewExists, setReviewExists] = useState(false)
@@ -45,7 +49,7 @@ function BookDetail() {
             })
             const rev = res.data.find(r => r.email == user.email)
             setReviews(res.data)
-            if(rev != null) setUserReview(rev)
+            if (rev != null) setUserReview(rev)
             setReviewExists(rev != null)
             console.log("reviews res: ", res);
         }
@@ -130,11 +134,11 @@ function BookDetail() {
         setShowDeleteModal((prev) => !prev);
     }
 
-    const handleDelete = async() => {
+    const handleDelete = async () => {
         try {
-            const res = await axios.delete(`/api/review/delete-user-review/${bookID}`,{
-                headers:{
-                    Authorization:`Bearer ${currentUser?.token}`
+            const res = await axios.delete(`/api/review/delete-user-review/${bookID}`, {
+                headers: {
+                    Authorization: `Bearer ${currentUser?.token}`
                 }
             })
             showToast("Review deleted successfully.")
@@ -148,6 +152,12 @@ function BookDetail() {
     const handleCancel = () => {
         setShowDeleteModal((prev) => !prev);
     }
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false)
+        setShowDeleteModal(false)
+    };
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -164,12 +174,15 @@ function BookDetail() {
         <>
             <ToastContainer />
             <Header />
+            <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
+                <NotifyMe/>
+            </FullScreenModal>
             <div className='p-2 mt-16'>
                 <div className='flex'>
                     <div className='flex flex-wrap flex-1 gap-4 items center text-zinc-600  md:w-2/5 p-2 rounded-md'>
                         <div className='flex flex-wrap md:flex-nowrap flex-1 gap-4  items center text-zinc-600 p-2 rounded-md'>
-                            <div className=''>
-                                <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={book.title} className=' w-60 h-80 min-w-60 rounded-md' />
+                            <div className='bg-slate-200 w-60 h-80 min-w-60 rounded  '>
+                                <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={book.title} className='w-full h-80 object-cover rounded' />
                             </div>
                             <div className='flex-grow py-2 relative '>
                                 <p className=' text-sm text-white font-semibold bg-orange-600 rounded-md px-1 w-fit'>{book.category}</p>
@@ -183,32 +196,57 @@ function BookDetail() {
 
                                 <div className='flex items-center gap-2'>
                                     <p>All India Delivery</p>
-                                    <p className='relative bg-slate-200 text-green-600 rounded-full shadow-sm px-2 text-sm'>
-                                        <span className='absolute top-1/2 left-2 -translate-y-1/2 w-2 h-2 bg-green-500 rounded-full'></span>
-                                        <span className='pl-3'>In Stock</span>
-                                    </p>
+                                    {
+                                        book.stock > 0 ? (
+                                            <p className='relative bg-slate-200 text-green-600 rounded-full shadow-sm px-2 text-sm'>
+                                                <span className='absolute top-1/2 left-2 -translate-y-1/2 w-2 h-2 bg-green-500 rounded-full'></span>
+                                                <span className='pl-3'>In Stock</span>
+                                            </p>
+                                        ) : (
+                                            <p className='relative bg-slate-200 text-red-600 rounded-full shadow-sm px-2 text-sm'>
+                                                <span className='absolute top-1/2 left-2 -translate-y-1/2 w-2 h-2 bg-red-500 rounded-full'></span>
+                                                <span className='pl-3'>Out of Stock</span>
+                                            </p>
+                                        )
+                                    }
                                 </div>
-                                <div className='py-2'>
-                                    <div className='flex gap-4 border p-2 rounded-md w-fit'>
-                                        <button className='text-sm' onClick={() => handleQuantityDecrement(book.bookID)}>
-                                            <FiMinus />
-                                        </button>
-                                        <span className='font-bold'>{quantity}</span>
-                                        <button className='text-sm' onClick={() => handleQuantityIncrement(book.bookID)}>
-                                            <FiPlus />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className='mt-2'>
-                                    <button
-                                        onClick={() => handleAddToCart(book)}
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Add to Cart
-                                    </button>
-                                    <button
-                                        onClick={handleBuyNow}
-                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Buy Now
-                                    </button>
-                                </div>
+                                {
+                                    book.stock > 0 && (
+                                        <div className='py-2'>
+                                            <div className='flex gap-4 border p-2 rounded-md w-fit'>
+                                                <button className='text-sm' onClick={() => handleQuantityDecrement(book.bookID)}>
+                                                    <FiMinus />
+                                                </button>
+                                                <span className='font-bold'>{quantity}</span>
+                                                <button className='text-sm' onClick={() => handleQuantityIncrement(book.bookID)}>
+                                                    <FiPlus />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    book.stock > 0 ? (
+                                        <div className='mt-2'>
+                                            <button
+                                                onClick={() => handleAddToCart(book)}
+                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Add to Cart
+                                            </button>
+                                            <button
+                                                onClick={handleBuyNow}
+                                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Buy Now
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className='w-full space-y-2 mt-5'>
+                                            <button className='bg-slate-200 opacity-50 border p-2 rounded-md w-1/3' disabled>Sold Out</button>
+                                            <button className='w-1/3 bg-red-600 text-white p-2 rounded-md flex items-center justify-center gap-x-2 hover:bg-red-500 border-2  focus:border-2 focus:border-sky-400' onClick={openModal}>
+                                                <IoNotifications />
+                                                <span>Notify Me</span>
+                                            </button>
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
                         {/* Rating  */}
@@ -254,7 +292,7 @@ function BookDetail() {
                     <div className=" flex items-center gap-2 mt-4">
                         <form className='flex items-center gap-2 mt-4 w-full' onSubmit={handleSubmitReview}>
                             <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
-                                <p>{user?.username[0].toUpperCase()}</p>
+                                <p>{user?.firstName[0].toUpperCase()}</p>
                             </div>
                             {
                                 reviewExists ? (

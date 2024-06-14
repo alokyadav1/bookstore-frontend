@@ -9,10 +9,13 @@ const OrderDetail = ({ detail }) => {
 
     return (
         <div className="border rounded-lg p-4 flex items-start bg-white mb-4">
-            <img src={bookCoverUrl} alt={book.title} className="w-16 h-24 object-cover mr-4" />
-            <div>
+            <div className='w-16 h-24 bg-slate-300 rounded'>
+                <img src={bookCoverUrl} alt={book.title} className="w-16 h-24 object-cover rounded" />
+            </div>
+            <div className='px-4'>
                 <h3 className="text-lg font-bold">{book.title}</h3>
                 <p className="text-gray-700"><strong>Quantity:</strong> {quantity}</p>
+                <p className='font-bold text-gray-700'>&#8377; {book?.price}</p>
             </div>
         </div>
     );

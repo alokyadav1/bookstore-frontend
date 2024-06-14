@@ -5,6 +5,10 @@ import { FaPlus } from 'react-icons/fa6';
 import { showToast } from '../../utils/toast';
 import { ToastContainer } from 'react-toastify';
 import AdminContext from '../../context/AdminContext';
+import Modal from '../../components/admin/Modal';
+import AddModal from '../../components/admin/Modal';
+import FullScreenModal from '../../components/admin/Modal';
+import BookForm from '../../components/admin/BookForm';
 
 // const booksData = [
 //   {
@@ -100,8 +104,8 @@ function Books() {
   const [filter, setFilter] = useState('');
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [booksData,setBooksData] = useState([]);
-  const {books} = useContext(AdminContext)
+  const [booksData, setBooksData] = useState([]);
+  const { books } = useContext(AdminContext)
 
   const filteredBooks = books?.filter(book =>
     (filter === '' || book.category.includes(filter)) &&
@@ -111,21 +115,42 @@ function Books() {
   );
 
   const handleEdit = (bookID) => {
+
     showToast("Book Edited successfully")
   }
   const handleRemove = (bookID) => {
     showToast("Book Removed successfully")
   }
 
+  const handleCancel = () => {
+
+  }
+
+  const handleAddBook = () => {
+
+  }
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <>
       <ToastContainer />
-      <div className="container mx-auto p-4">
+
+      <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
+        <BookForm isAddForm={true} title={'Add Book'} />
+      </FullScreenModal>
+
+      <div className=" mx-auto p-2">
         <div className='flex justify-between items-center'>
           <h1 className="text-2xl font-bold mb-4">Books</h1>
-          <div className="flex items-center gap-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-            <FaPlus />
-            <button className="focus:outline-none">Add Book</button>
+          <div className="flex items-center gap-x-2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+            <button className="flex items-center gap-x-2 focus:outline-none" onClick={openModal}>
+              <FaPlus />
+              <span>Add Book</span>
+            </button>
           </div>
         </div>
         <div className="mb-4 flex space-x-4">

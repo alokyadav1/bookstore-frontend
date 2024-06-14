@@ -3,14 +3,21 @@ import React, { useContext } from 'react'
 import { FaCircleUser } from 'react-icons/fa6'
 import UserContext from '../../context/UserContext';
 import { showToast } from '../../utils/toast';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { BiLogOutCircle } from 'react-icons/bi';
 
 function AdminSideBar() {
-    const {user} = useContext(UserContext)
-    console.log("user: ", user);
+    const navigate = useNavigate()
+    const {user,dispatchUser} = useContext(UserContext)
     const handleLogout = () => {
+        dispatchUser({
+            type: "LOGOUT"
+        })
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("userRole");
+        navigate("/admin/login")
         showToast("Handle Logout")
+
     }
     return (
         <aside className='flex flex-col justify-between py-2 min-h-screen min-w-64 space-y-2'>

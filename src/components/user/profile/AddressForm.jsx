@@ -1,13 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from "../../../Axios/axios"
 import { header } from '../../../utils/apiRequests'
 import { showToast } from "../../../utils/toast"
 import { ToastContainer } from 'react-toastify'
+import AddressContext from '../../../context/AddressContext'
 
 function AddressForm({ add = null, handleCancel }) {
     const [address, setAddress] = useState(add)
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+    const { addAddress, updateAddress } = useContext(AddressContext)
+
     let resMsg = "";
     const handleInputChange = (e) => {
         setAddress({ ...address, [e.target.name]: e.target.value })
@@ -15,26 +19,24 @@ function AddressForm({ add = null, handleCancel }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("form: ", address);
         if (add == null) { // add address
-            const res = await axios.post("/api/address/add", address, header)
-            if (res.status == 200) {
+            const success = addAddress(address)
+            if (success) {
                 resMsg = "Address added successfully"
                 handleCancel()
             } else {
                 resMsg = "Unable to add address"
             }
         } else { // update address
-            const res = await axios.patch("/api/address/update-address",address,header)
-            console.log("res: ",res);
-            if(res.status == 200){
+            const success = updateAddress(address)
+            if (success) {
                 handleCancel()
                 resMsg = "Address Updated Successfully"
             } else {
                 resMsg = "Unable to update address"
             }
         }
-        showToast("resMsg")
+        showToast(resMsg)
     }
 
     return (

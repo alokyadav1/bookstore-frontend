@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* .active{
+.active{
     color: blue;
     background-color: seashell;
-} */
+}
 
 
 #admin-sidebar li:has(> a.active){

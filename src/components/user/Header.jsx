@@ -74,7 +74,7 @@ const Header = () => {
             </div>
             <div className='relative w-1/3 group'>
                 <form onSubmit={handleSearch}>
-                    <div className='flex bg-zinc-100 border border-zinc-400 rounded-xl'>
+                    <div className='flex bg-zinc-100 border border-zinc-200 rounded-xl'>
                         <input
                             className='p-2 rounded-l-xl border-r border-slate-200 px-4 font-normal w-full bg-zinc-100 focus:outline-1 focus:outline-blue-800 '
                             type="text" placeholder='Search Books' value={keyword}
@@ -144,7 +144,7 @@ const Header = () => {
                             <div className="relative group p-2">
                                 <div className='bg-red-600 rounded-full border border-red-300 flex items-center justify-center w-9 h-9 text-white'>
                                     <button className="group uppercase">
-                                        {user.username[0]}
+                                        {user?.firstName[0]}
                                     </button>
                                 </div>
                                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 hidden group-hover:block text-center">

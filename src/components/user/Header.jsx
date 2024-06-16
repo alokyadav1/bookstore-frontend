@@ -41,7 +41,11 @@ const Header = () => {
         const inputChange = setTimeout(handleInputChange, 1000)
 
         return () => clearTimeout(inputChange)
+<<<<<<< HEAD
     }, [currentUser?.token, keyword])
+=======
+    },[currentUser?.token, keyword])
+>>>>>>> e00da32 (local changes)
 
     const handleSearch = (e) => {
         e.preventDefault()

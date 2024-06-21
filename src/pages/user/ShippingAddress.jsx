@@ -8,7 +8,7 @@ import AddressList from './AddressList'
 import { showToast } from '../../utils/toast'
 import { ToastContainer } from 'react-toastify'
 
-function ShippingAddress({ addresses }) {
+function ShippingAddress({ addresses, handleShippingAddressParent }) {
     const [shippingAddress, setShippingAddress] = useState(addresses.at(0))
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -16,8 +16,8 @@ function ShippingAddress({ addresses }) {
     const closeModal = () => setIsModalOpen(false)
 
     const handleShippingAddressChange = (newAddress) => {
-        showToast("Shipping Address Changed")
         setShippingAddress(newAddress)
+        handleShippingAddressParent(newAddress)
         closeModal()
     }
     return (

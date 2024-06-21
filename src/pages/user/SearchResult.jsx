@@ -8,7 +8,9 @@ import Filter from '../../components/user/Filter'
 
 function SearchResult() {
     const { keyword } = useParams()
+    const [allResultBooks, setAllResultBooks] = useState([])
     const [resultBooks, setResultBooks] = useState([])
+    const [filterCategories, setFilterCategories] = useState([])
     const [loading, setLoading] = useState(false)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
 
@@ -24,10 +26,21 @@ function SearchResult() {
                 }
             })
             setResultBooks(res.data)
+            setAllResultBooks(res.data)
             setLoading(false)
         }
         search()
     }, [currentUser.token, keyword])
+
+    const handleApplyFilter = (filter) => {
+        const filteredBooks = allResultBooks.filter(book => {
+            const categoriesFilter = filter.selectedCategories.length <= 0 || filter.selectedCategories.includes(book.category)
+            return categoriesFilter && (
+                book.price >= filter.priceRange.at(0) && book.price <= filter.priceRange.at(1)
+            )
+        })
+        setResultBooks(filteredBooks)
+    }
 
     return (
         <>
@@ -36,7 +49,7 @@ function SearchResult() {
                 !loading ? (
                     <div className='mt-16 p-2 flex'>
                         <div className="container mx-auto w-fit">
-                            <Filter categories={categories} authors={authors} />
+                            <Filter categories={categories} authors={authors} handleFilter={handleApplyFilter} />
                             {/* Add other components here */}
                         </div>
                         <div className=' flex-grow p-4'>

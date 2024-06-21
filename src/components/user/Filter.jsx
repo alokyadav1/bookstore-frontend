@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 
-const Filter = ({ categories, authors }) => {
+const Filter = ({ categories, authors, handleFilter }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -24,6 +24,17 @@ const Filter = ({ categories, authors }) => {
         : [...prev, author]
     );
   };
+
+  const applyFilters = () => {
+    const allFilters = {
+      selectedCategories,
+      selectedAuthors,
+      priceRange,
+      selectedRating,
+      publicationDate
+    }
+    handleFilter(allFilters)
+  }
 
   return (
     <div className="p-4 border rounded-md shadow-lg">
@@ -109,16 +120,7 @@ const Filter = ({ categories, authors }) => {
 
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={() => {
-          // Implement filter action here
-          console.log('Filters:', {
-            selectedCategories,
-            priceRange,
-            selectedRating,
-            selectedAuthors,
-            publicationDate,
-          });
-        }}
+        onClick={applyFilters}
       >
         Apply Filters
       </button>

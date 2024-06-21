@@ -18,6 +18,7 @@ const CheckoutPage = () => {
     const navigate = useNavigate()
     const { dispatchCart } = useContext(AppContext)
     const { addresses, loading } = useContext(AddressContext)
+    const [shippingAddress, setShippingAddress] = useState()
     const [cartItem, setCartItem] = useState(null)
     const [coupon, setCoupon] = useState(null)
     const [showConfetti, setShowConfetti] = useState(false)
@@ -30,7 +31,8 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         setCartItem(location.state.cart)
-    }, [location.state.cart])
+        setShippingAddress(formateAddress(addresses.at(0)))
+    }, [addresses, location.state.cart])
 
     const handlePlaceOrder = async () => {
         const book = cartItem?.map(item => {
@@ -41,7 +43,12 @@ const CheckoutPage = () => {
         })
 
         const res = await axios.post("/api/orders/save-order", {
-            totalAmount: totalPrice + shippingCharge - discountAmount, books: book, couponId: coupon?.couponID
+            totalAmount: totalPrice, 
+            books: book, 
+            couponId: coupon?.couponID,
+            shippingAddress:shippingAddress,
+            discountPrice:discountAmount,
+            shipping_charges:shippingCharge
         }, {
             headers: {
                 Authorization: `Bearer ${currentUser.token}`
@@ -58,6 +65,7 @@ const CheckoutPage = () => {
         })
     }
 
+    // delete cart once order is completed
     const deleteCart = async () => {
         dispatchCart({
             type: "DELETE_CART"
@@ -77,6 +85,18 @@ const CheckoutPage = () => {
         setCoupon(response.coupon)
     }
 
+    const changeShippingAddress = (newAddress) => {
+        setShippingAddress(formateAddress(newAddress))
+        console.log(newAddress);
+    }
+
+    const formateAddress = (address) => {
+        const add = `${address.building},${address?.street},${address?.city},${address?.state}-${address?.pinCode}`
+        const recipientName = address?.name
+        const recipientMobile = address?.mobileNo
+
+        return `${recipientName}/${add}/${recipientMobile}`
+    }
     return (
         <>
             {showConfetti && <ConfettiComponent />}
@@ -119,6 +139,7 @@ const CheckoutPage = () => {
 
                     {/* Coupon section */}
                     <Coupons appliedCoupon={handleApplyCoupon} totalPrice={totalPrice} />
+                    {shippingAddress}
                 </div>
                 <div className="mt-10  px-1 pt-8 lg:mt-0">
                     <div className="space-y-2">
@@ -135,7 +156,7 @@ const CheckoutPage = () => {
                                 </div>
                             ) : (
                                 <div className="border p-4 bg-white rounded-md">
-                                    <ShippingAddress addresses={addresses} />
+                                    <ShippingAddress addresses={addresses} handleShippingAddressParent={changeShippingAddress} />
                                 </div>
                             )
                         }

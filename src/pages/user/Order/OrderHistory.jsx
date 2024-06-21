@@ -102,6 +102,7 @@ function OrderHistory() {
                 {orders.map((order, index) => (
                   <div>
                     <OrderDetails key={index} order={order} />
+                    
                     <div className="flex flex-col px-7 pt-3 pb-7 bg-white rounded shadow-sm max-md:px-5 max-md:max-w-full">
                       <div className="flex gap-5 justify-between px-4 py-2.5 w-full text-xs leading-4 bg-orange-100 rounded shadow-sm text-zinc-900 max-md:flex-wrap max-md:max-w-full">
                         <div className="flex gap-0.5">

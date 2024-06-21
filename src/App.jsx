@@ -33,6 +33,7 @@ import Orders from './pages/admin/Orders'
 import Coupons from './pages/admin/Coupons'
 import UserNotVerified from './pages/user/UserNotVerified'
 import EmailVerificationSuccess from './pages/user/EmailVerificationSuccess'
+import Invoice from './components/user/Invoice'
 
 function App() {
 
@@ -86,6 +87,7 @@ function App() {
               <Route path='checkout' element={<CheckoutPage />} />
               <Route path='checkout/payment-success' element={<PaymentSuccessfulPage />} />
               <Route path='orderHistory' element={<OrderHistory />} />
+              <Route path='invoice' element={<Invoice />} />
               <Route path='category/:categoryName' element={<Category />} />
               <Route path='search/:keyword' element={<SearchResult />} />
               <Route path='book/:bookID' element={<BookDetail />} />

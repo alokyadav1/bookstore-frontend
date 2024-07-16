@@ -23,10 +23,10 @@ function UserDashBoard() {
       })
     }
 
-    const fetchCart = async () => {
-      const res = await axios.get("/api/cart/get-cart", {
-        headers: {
-          Authorization: `Bearer ${currentUser?.token}`
+    const fetchCart = async() => {
+      const res = await axios.get("/api/cart/get-cart",{
+        headers:{
+          Authorization:`Bearer ${currentUser?.token}`
         }
       })
 
@@ -45,7 +45,7 @@ function UserDashBoard() {
     fetchBook()
     fetchCart()
 
-  }, [])
+  }, [currentUser?.token])
 
 
   return (

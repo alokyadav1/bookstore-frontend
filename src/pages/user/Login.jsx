@@ -36,9 +36,6 @@ const LoginPage = () => {
         navigate("/user")
       }
     } catch (error) {
-      if(error.response.status == 403){
-        navigate("/user/not-verified")
-      }
       console.log(error.response.status);
       setError(error.response.data)
       setLoading(false)

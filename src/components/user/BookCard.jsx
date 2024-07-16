@@ -91,8 +91,8 @@ const BookCard = ({ book, bookQuantity, handleClick }) => {
                             <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={`${book.title} cover`} className="w-full h-48 object-cover rounded mb-4" />
                         </div>
                         <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2">{book.title}</div>
-                            <p className="text-gray-500 text-base italic">{book.description}</p>
+                            <div className="font-bold text-xl mb-2 max-h-12 leading-tight line-clamp-1">{book.title}</div>
+                            <p className="text-gray-500 text-base italic max-h-18 leading-tight line-clamp-3">{book.description}</p>
                             <p className="text-gray-700 text-base"><span className='font-bold'>Author:</span> {book.author}</p>
                             <p className=" text-slate-700 text-xl font-extrabold ">&#8377;{book.price}</p>
                         </div>

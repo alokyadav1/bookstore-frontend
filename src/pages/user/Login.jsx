@@ -3,10 +3,12 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import axios from "../../Axios/axios";
+import SessionContext from "../../context/sessionContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { dispatchUser } = useContext(UserContext);
+  const {dispatchSession} = useContext(SessionContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,6 +24,11 @@ const LoginPage = () => {
       if (res.status == 200) {
         localStorage.setItem("currentUser", JSON.stringify(res.data))
         localStorage.setItem("userRole", "USER")
+
+        dispatchSession({
+          type: "LOGIN",
+        })
+        
         dispatchUser({
           type: "SET_USER",
           payload: res.data.user

@@ -17,18 +17,30 @@ const Order = ({ order, user }) => {
     return (
         <>
             <div className="border rounded-lg p-4 shadow-md bg-gray-50 mb-4">
-                <div className="flex justify-between items-center mb-4">
-                    <div>
-                        <h2 className="text-xl font-bold">Order ID: {order.orderId}</h2>
-                        <p className="text-gray-700"><strong>Order Date:</strong> {orderDate}</p>
-                        <p className="text-gray-700"><strong>Total Amount:</strong> &#8377;{order.totalAmount}</p>
-                        <p className="text-gray-700"><strong>Customer:</strong> {user?.email}</p>
-                    </div>
-                </div>
-                <div>
-                    <button className='bg-blue-500 text-white p-2 w-full rounded' onClick={openModal}>View Books</button>
-                </div>
+                <table className="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th className="px-4 py-2 border-b-2">Order ID</th>
+                            <th className="px-4 py-2 border-b-2">Order Date</th>
+                            <th className="px-4 py-2 border-b-2">Total Amount</th>
+                            <th className="px-4 py-2 border-b-2">Customer</th>
+                            <th className="px-4 py-2 border-b-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td className="px-4 py-2 border-b">{order.orderId}</td>
+                            <td className="px-4 py-2 border-b">{orderDate}</td>
+                            <td className="px-4 py-2 border-b">&#8377;{order.totalAmount}</td>
+                            <td className="px-4 py-2 border-b">{user?.email}</td>
+                            <td className="px-4 py-2 border-b">
+                                <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={openModal}>View Books</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+
 
             <FullScreenModal isOpen={isModalOpen} onClose={closeModal} showCloseBtn={true}>
                 <div>

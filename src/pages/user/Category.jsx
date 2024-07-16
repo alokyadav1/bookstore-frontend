@@ -20,11 +20,9 @@ function Category({category}) {
             category[book.category].push(book)
         })
 
-        console.log("category: ", category);
         setCategoryBooks(category[categoryName])
     },[books, categoryName])
 
-    console.log("category Books", categoryBooks);
     
     return (
         <>

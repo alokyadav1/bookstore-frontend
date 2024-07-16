@@ -44,6 +44,9 @@ function AdminSideBar() {
                 <li className='rounded-md'>
                     <NavLink to="/admin/coupons" className="block w-full p-2 rounded-md hover:bg-sky-500">Coupons</NavLink>
                 </li>
+                <li className='rounded-md'>
+                    <NavLink to="/admin/inventory" className="block w-full p-2 rounded-md hover:bg-sky-500">Inventory</NavLink>
+                </li>
             </ul>
             <div className='flex items-center gap-x-2 border bg-red-600 text-white px-2 rounded-md shadow-md '>
                 <button className='py-3 flex items-center gap-x-2' onClick={handleLogout}>

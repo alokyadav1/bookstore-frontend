@@ -9,115 +9,31 @@ import Modal from '../../components/admin/Modal';
 import AddModal from '../../components/admin/Modal';
 import FullScreenModal from '../../components/admin/Modal';
 import BookForm from '../../components/admin/BookForm';
+import Pagination from '../../components/Pagination';
 
-// const booksData = [
-//   {
-//     "bookID": 271,
-//     "title": "Critique of Pure Reason",
-//     "description": "A seminal work in modern philosophy.",
-//     "aboutBook": null,
-//     "author": "Immanuel Kant",
-//     "price": 550.0,
-//     "isbn": "9780140449471",
-//     "stock": 20,
-//     "category": "Philosophy"
-//   },
-//   {
-//     "bookID": 278,
-//     "title": "I, Robot",
-//     "description": "A science fiction classic exploring robotics.",
-//     "aboutBook": null,
-//     "author": "Isaac Asimov",
-//     "price": 450.0,
-//     "isbn": "9780553294385",
-//     "stock": 20,
-//     "category": "Sci-Fi"
-//   },
-//   {
-//     "bookID": 319,
-//     "title": "Treasure Island",
-//     "description": "A tale of pirates and buried treasure.",
-//     "aboutBook": null,
-//     "author": "Robert Louis Stevenson",
-//     "price": 300.0,
-//     "isbn": "9780141321008",
-//     "stock": 20,
-//     "category": "Adventure"
-//   },
-//   {
-//     "bookID": 321,
-//     "title": "The Count of Monte Cristo",
-//     "description": "A swashbuckling adventure novel.",
-//     "aboutBook": null,
-//     "author": "Alexandre Dumas",
-//     "price": 500.0,
-//     "isbn": "9780140449260",
-//     "stock": 20,
-//     "category": "Adventure"
-//   },
-//   {
-//     "bookID": 334,
-//     "title": "Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future",
-//     "description": "The biography of the tech entrepreneur.",
-//     "aboutBook": null,
-//     "author": "Elon Musk",
-//     "price": 550.0,
-//     "isbn": "9780062301239",
-//     "stock": 20,
-//     "category": "Biography"
-//   },
-//   {
-//     "bookID": 336,
-//     "title": "The Last Lion: Winston Spencer Churchill",
-//     "description": "The life of Britain's wartime leader.",
-//     "aboutBook": null,
-//     "author": "Winston Churchill",
-//     "price": 600.0,
-//     "isbn": "9780141981255",
-//     "stock": 20,
-//     "category": "Biography"
-//   },
-//   {
-//     "bookID": 363,
-//     "title": "Strange Case of Dr Jekyll and Mr Hyde",
-//     "description": "A novella about the duality of human nature.",
-//     "aboutBook": null,
-//     "author": "Robert Louis Stevenson",
-//     "price": 300.0,
-//     "isbn": "9780486266886",
-//     "stock": 20,
-//     "category": "Horror"
-//   },
-//   {
-//     "bookID": 388,
-//     "title": "The Notebook",
-//     "description": "A modern romance novel.",
-//     "aboutBook": null,
-//     "author": "Nicholas Sparks",
-//     "price": 500.0,
-//     "isbn": "9780446605236",
-//     "stock": 20,
-//     "category": "Romance"
-//   }
-// ]
 function Books() {
-  const [filter, setFilter] = useState('');
+  const [category, setCategory] = useState('');
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState(null)
   const [booksData, setBooksData] = useState([]);
   const { books } = useContext(AdminContext)
 
   const filteredBooks = books?.filter(book =>
-    (filter === '' || book.category.includes(filter)) &&
+    (category === '' || book.category.includes(category)) &&
     book.price >= priceRange[0] && book.price <= priceRange[1] &&
     (book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.author.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleEdit = (bookID) => {
-
-    showToast("Book Edited successfully")
+  const handleEdit = (status) => {
+    if (status == 200) {
+      showToast("Book updated successfully")
+    } else {
+      showToast("Failed to update book")
+    }
   }
+
   const handleRemove = (bookID) => {
     showToast("Book Removed successfully")
   }
@@ -126,21 +42,29 @@ function Books() {
 
   }
 
-  const handleAddBook = () => {
-
+  const handleAddBook = (status) => {
+    closeModal()
+    if (status == 200) {
+      showToast("Book added successfully")
+    } else {
+      showToast("Failed to add book")
+    }
   }
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+
+
   return (
     <>
       <ToastContainer />
 
       <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
-        <BookForm isAddForm={true} title={'Add Book'} />
+        <BookForm isAddForm={true} title={'Add Book'} handleAddBook={handleAddBook} />
       </FullScreenModal>
 
       <div className=" mx-auto p-2">
@@ -163,8 +87,8 @@ function Books() {
           />
           <select
             className="border p-2 rounded "
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">All Categories</option>
             <option value="Romance">Romance</option>
@@ -177,6 +101,7 @@ function Books() {
             <option value="Novel">Novel</option>
             <option value="Fantasy">Fantasy</option>
             <option value="Horror">Horror</option>
+            <option value="History">History</option>
           </select>
           <div className="flex items-center flex-grow">
             <span>Max Price:</span>
@@ -191,10 +116,13 @@ function Books() {
             <span>&#8377;{priceRange[1]}</span>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredBooks?.map(book => (
-            <Book key={book.bookID} book={book} onEdit={handleEdit} onRemove={handleRemove} />
-          ))}
+        <div>
+          <Pagination
+            books={books}
+            handleEdit={handleEdit}
+            handleRemove={handleRemove}
+            filter={{category,searchQuery,priceRange}}
+          />
         </div>
       </div>
     </>

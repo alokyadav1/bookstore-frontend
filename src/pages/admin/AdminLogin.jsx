@@ -3,10 +3,12 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import axios from "../../Axios/axios";
+import SessionContext from "../../context/sessionContext";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { dispatchUser } = useContext(UserContext);
+  const {dispatchSession} = useContext(SessionContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,14 +24,20 @@ const AdminLogin = () => {
       if (res.status == 200) {
         localStorage.setItem("admin", JSON.stringify(res.data))
         localStorage.setItem("userRole", "ADMIN")
+
+        dispatchSession({
+          type: "LOGIN",
+        })
+
         dispatchUser({
           type: "SET_USER",
           payload: res.data.user
         })
         navigate("/admin")
+      } else {
+        setError("Something went wrong")
       }
     } catch (error) {
-      console.log(error.response.status);
       setError(error.response.data)
       setLoading(false)
     }

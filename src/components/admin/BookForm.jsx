@@ -2,8 +2,11 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { FaBook, FaUser, FaTag, FaDollarSign, FaHashtag, FaBoxes } from 'react-icons/fa';
+import axios from "../../Axios/axios"
 
-const BookForm = ({ data, isAddForm, title }) => {
+const BookForm = ({ data, isAddForm, title, handleEditBook, handleAddBook }) => {
+  const currentUser = JSON.parse(localStorage.getItem("admin"))
+  console.log("data", data);
   const [formData, setFormData] = useState(data || {
     title: '',
     description: '',
@@ -24,9 +27,45 @@ const BookForm = ({ data, isAddForm, title }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here, such as an API call
+    if (isAddForm) {
+      addBook(formData)
+    } else {
+      editBook(formData)
+    }
     console.log(formData);
   };
+
+  const editBook = async (book) => {
+    try {
+      const res = await axios.patch(`/api/book/update/${data.bookID}`, book, {
+        headers: {
+          Authorization: `Bearer ${currentUser?.token}`
+        }
+      })
+      console.log("book edit red:", res.data);
+      handleEditBook(res.status)
+    } catch (error) {
+      console.log(error);
+      handleEditBook(500)
+    }
+  }
+
+  const addBook = async (book) => {
+    try {
+      const res = await axios.post("/api/book/add", book, {
+        headers: {
+          Authorization: `Bearer ${currentUser?.token}`
+        }
+      })
+
+      handleAddBook(res.status)
+    } catch (error) {
+      console.log(error);
+      handleAddBook(500)
+    }
+
+
+  }
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg">
@@ -113,12 +152,17 @@ const BookForm = ({ data, isAddForm, title }) => {
             onChange={handleChange}
             required
           >
+            <option value="Philosophy">Philosophy</option>
+            <option value="Sci-Fi">Sci-Fi</option>
             <option value="Self-Help">Self-Help</option>
-            <option value="Fiction">Fiction</option>
-            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Adventure">Adventure</option>
             <option value="Biography">Biography</option>
-            <option value="Science">Science</option>
+            <option value="Novel">Novel</option>
             <option value="Fantasy">Fantasy</option>
+            <option value="Horror">Horror</option>
+            <option value="Romance">Romance</option>
+            <option value="History">History</option>
           </select>
         </div>
         <button

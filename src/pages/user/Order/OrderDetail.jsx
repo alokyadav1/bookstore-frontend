@@ -3,11 +3,13 @@ import { useState } from "react";
 import FullScreenModal from "../../../components/admin/Modal";
 import Invoice from "../../../components/user/Invoice";
 import { useNavigate } from "react-router-dom";
+import OrderItem from "./OrderItem";
 
 /* eslint-disable react/prop-types */
 function OrderDetails({ order }) {
     const navigate = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [expandOrder, setExpandOrder] = useState(false)
     const formatedDate = new Date(order.orderDate).toLocaleString(
         "en-US",
         {
@@ -59,11 +61,23 @@ function OrderDetails({ order }) {
                         order ID: #{order.orderId}
                     </div>
                     <div className="flex gap-5 justify-between mt-2.5 text-xs leading-5 text-slate-500">
-                        <button>View order details</button>
+                        <button onClick={() => setExpandOrder(!expandOrder)}>{expandOrder ? 'Hide' : "Show"} order details</button>
                         <button onClick={openInvoice}>View invoice</button>
                     </div>
                 </div>
             </div>
+            {/* order details */}
+            {
+                expandOrder && (
+                    <div className="flex flex-col px-7 pt-3 pb-7 bg-white rounded max-md:px-5 max-md:max-w-full ">
+                        <div className="space-y-1">
+                            {order.orderDetail?.map((item, index) => (
+                                <OrderItem key={index} item={item} />
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
         </>
     );
 }

@@ -19,6 +19,7 @@ import { comment } from 'postcss';
 import { IoNotifications } from 'react-icons/io5';
 import FullScreenModal from '../../components/admin/Modal';
 import NotifyMe from '../../components/user/NotifyMe';
+import { FaAngleLeft } from 'react-icons/fa6';
 
 // handle add to cart
 function BookDetail() {
@@ -39,8 +40,9 @@ function BookDetail() {
 
 
     const book = books?.find(book => book.bookID == bookID)
-
+    if (currentUser == null) navigate("/user/login")
     useEffect(() => {
+
         const fetchReviews = async () => {
             const res = await axios.get(`/api/review/get-review-by-bookID/${bookID}`, {
                 headers: {
@@ -55,7 +57,7 @@ function BookDetail() {
         }
         fetchReviews()
         scrollToTop()
-    }, [bookID, currentUser.token, user?.email])
+    }, [bookID, currentUser?.token, user?.email])
 
 
     const handleAddToCart = async (book) => {
@@ -175,9 +177,16 @@ function BookDetail() {
             <ToastContainer />
             <Header />
             <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
-                <NotifyMe/>
+                <NotifyMe />
             </FullScreenModal>
+           
             <div className='p-2 mt-16'>
+                 {/* create a back button */}
+                <button
+                    onClick={() => navigate("/user")}
+                    className="text-black font-bold py-2 px-4 rounded flex items-center">
+                        <FaAngleLeft className="inline-block" />Back
+                </button>
                 <div className='flex'>
                     <div className='flex flex-wrap flex-1 gap-4 items center text-zinc-600  md:w-2/5 p-2 rounded-md'>
                         <div className='flex flex-wrap md:flex-nowrap flex-1 gap-4  items center text-zinc-600 p-2 rounded-md'>
@@ -322,8 +331,7 @@ function BookDetail() {
                     </div>
                 </div>
             </div>
-            <div className='p-5'>
-                <h3 className='text-xl font-bold mb-2'>You may Like</h3>
+            <div>
                 <div>
                     <BookSuggestion
                         category={book.category}
@@ -331,6 +339,7 @@ function BookDetail() {
                         bookID={bookID}
                         handleClick={scrollToTop} />
                 </div>
+                
             </div>
             {showDeleteModal && <DeleteModal onDelete={handleDelete} onCancel={handleCancel} />}
         </>

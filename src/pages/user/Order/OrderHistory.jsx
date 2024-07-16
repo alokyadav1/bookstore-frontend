@@ -100,31 +100,8 @@ function OrderHistory() {
                   </select>
                 </div>
                 {orders.map((order, index) => (
-                  <div>
+                  <div className="mb-5">
                     <OrderDetails key={index} order={order} />
-                    
-                    <div className="flex flex-col px-7 pt-3 pb-7 bg-white rounded shadow-sm max-md:px-5 max-md:max-w-full">
-                      <div className="flex gap-5 justify-between px-4 py-2.5 w-full text-xs leading-4 bg-orange-100 rounded shadow-sm text-zinc-900 max-md:flex-wrap max-md:max-w-full">
-                        <div className="flex gap-0.5">
-                          <img
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/40c6ad58d93f6f0e469c2918fdacbdafdef33b45ae30c82e5146aa3c5bdf91aa?apiKey=9f77487837bf4515971f5e92222e87f9&"
-                            alt=""
-                            className="shrink-0 w-4 aspect-square"
-                          />
-                          <div className="flex-auto my-auto">
-                            Please rate your experience with the seller
-                          </div>
-                        </div>
-                        <img
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/0bc1acf4af14a35c48fc0bce71e7f245cfbbcfc9365216d93bd96dfcfd1be96f?apiKey=9f77487837bf4515971f5e92222e87f9&"
-                          alt=""
-                          className="shrink-0 my-auto w-3 aspect-square"
-                        />
-                      </div>
-                      {order.orderDetail?.map((item, index) => (
-                        <OrderItem key={index} item={item} />
-                      ))}
-                    </div>
                   </div>
 
                 ))}

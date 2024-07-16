@@ -41,7 +41,7 @@ const CheckoutPage = () => {
                 quantity: item.quantity
             }
         })
-
+        console.log("book bought: ", book);
         const res = await axios.post("/api/orders/save-order", {
             totalAmount: totalPrice, 
             books: book, 
@@ -165,7 +165,7 @@ const CheckoutPage = () => {
                         <div className="mt-6 border-t border-b py-2">
                             <div className="flex items-center justify-between">
                                 <p className="text-sm font-medium text-gray-900">Subtotal</p>
-                                <p className="font-semibold text-gray-900">&#8377; {totalPrice}</p>
+                                <p className="font-semibold text-gray-900">&#8377; {totalPrice?.toFixed(2)}</p>
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="text-sm font-medium text-gray-900">Shipping</p>
@@ -181,9 +181,9 @@ const CheckoutPage = () => {
                         <div className="mt-6 flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-900">Total</p>
                             <p className="text-2xl font-semibold text-gray-900 flex items-center gap-x-2">
-                                <span className={coupon ? 'text-zinc-400 text-lg line-through' : ''}>&#8377;{totalPrice + shippingCharge}</span>
+                                <span className={coupon ? 'text-zinc-400 text-lg line-through' : ''}>&#8377;{(totalPrice + shippingCharge).toFixed(2)}</span>
                                 {
-                                    coupon && <span>&#8377;{totalPrice + shippingCharge - discountAmount}</span>
+                                    coupon && <span>&#8377;{(totalPrice + shippingCharge - discountAmount).toFixed(2)}</span>
                                 }
                             </p>
                         </div>

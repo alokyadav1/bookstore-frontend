@@ -7,6 +7,7 @@ import AppContext from '../../context/AppContext'
 import axios from "../../Axios/axios"
 import cartReducer from '../../reducer/CartReducer'
 import { AddressProvider } from '../../context/AddressContext'
+import { OrderProvider } from '../../context/OrderContext.jsx'
 
 function UserDashBoard() {
   const [books, dispatchBook] = useReducer(BookReducer, null)
@@ -50,9 +51,11 @@ function UserDashBoard() {
   return (
     <AppContext.Provider value={{ books, dispatchBook, cart, dispatchCart }}>
       <AddressProvider>
-        <>
-          <Outlet />
-        </>
+        <OrderProvider>
+          <>
+            <Outlet />
+          </>
+        </OrderProvider>
       </AddressProvider>
 
     </AppContext.Provider>

@@ -6,8 +6,9 @@ import FullScreenModal from './Modal';
 import BookForm from './BookForm';
 import DeleteModalContent from './DeleteModalContent';
 import { showToast } from '../../utils/toast';
+import { ToastContainer } from 'react-toastify';
 
-const Book = ({ book, onRemove }) => {
+const Book = ({ book, onRemove, onEdit }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -17,18 +18,34 @@ const Book = ({ book, onRemove }) => {
         setShowDeleteModal(false)
     };
 
-    const handleRemove = () => {
+    const handleRemove = (status) => {
         closeModal()
         setShowDeleteModal(false)
-        showToast("Book deleted Successfully")
+        if(status == 200) {
+            showToast("Book deleted Successfully")
+        } else {
+            showToast("Failed to delete book")
+        }
     }
 
-    const modalData = {
-        title:"Delete Book",
-        type:'book',
-        itemName:book.title
+    const handleEditBook = (status) => {
+        closeModal()
+        if (status == 200) {
+            showToast("Book updated successfully")
+        } else {
+            showToast("Failed to update book")
+        }
     }
+
     
+
+    const modalData = {
+        title: "Delete Book",
+        type: 'book',
+        itemName: book.title,
+        bookId: book.bookID
+    }
+
     return (
         <>
             <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
@@ -36,7 +53,12 @@ const Book = ({ book, onRemove }) => {
                     showDeleteModal ? (
                         <DeleteModalContent modal={modalData} onConfirm={handleRemove} onClose={closeModal} />
                     ) : (
-                        <BookForm isAddForm={false} data={book} title={'Edit Book'} />
+                        <BookForm
+                            isAddForm={false}
+                            data={book}
+                            title={'Edit Book'}
+                            handleEditBook={handleEditBook}
+                        />
                     )
                 }
             </FullScreenModal>

@@ -13,6 +13,7 @@ function ReviewTemplate({ review, onDeleteReview, }) {
   const [upvotesDisabled, setUpvoteDisabled] = useState(false)
   const [downvotesDisabled, setDownvoteDisabled] = useState(false)
 
+  console.log(review);
 
   const handleUpvotes = () => {
     setUpvotes(upvotes + 1)
@@ -52,7 +53,7 @@ function ReviewTemplate({ review, onDeleteReview, }) {
         <div className="description">
           <div className="header">
             <div className="bg-orange-700 text-white rounded-full w-7 h-7 font-extrabold flex justify-center items-center">
-              <p>{review.username[0].toUpperCase()}</p>
+              <p>{review?.firstName[0].toUpperCase()}</p>
             </div>
             <p className="username">
               <span className=" text-base">{review.username}</span>

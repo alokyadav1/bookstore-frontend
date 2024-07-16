@@ -6,11 +6,15 @@ import { FaCartShopping } from "react-icons/fa6";
 import AppContext from '../../context/AppContext';
 import axios from "../../Axios/axios"
 import { FaSearch } from 'react-icons/fa';
+import { RiEqualizer2Fill, RiEqualizer3Fill, RiEqualizer3Line, RiEqualizerFill } from 'react-icons/ri';
+
+const categories = ["Philosophy", "Sci-Fi", "Self-Help", "Mystery", "Adventure", "Biography", "Novel", "Fantasy", "Horror", "Romance"]
 
 const Header = () => {
     const navigate = useNavigate();
     const [keyword, setKeyword] = useState("")
     const [searchResult, setSearchResult] = useState([])
+    const [showSuggested, setShowSuggested] = useState(true)
     const [isInputFocused, setIsInputFocused] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const currentUser = JSON.parse(localStorage.getItem("currentUser"))
@@ -19,7 +23,7 @@ const Header = () => {
     const { cart } = useContext(AppContext)
 
     useEffect(() => {
-        
+
         const getSearchResult = async (search) => {
             if (search.length > 0) {
                 const res = await axios.get(`/api/search/searchByTitleOrAuthor/${search}`, {
@@ -68,54 +72,79 @@ const Header = () => {
     }
 
     return (
-        <header className=" bg-white/70 backdrop-blur-md text-neutral-800 font-semibold fixed top-0 w-full p-3 h-14 pr-5 flex justify-between items-center rounded-xl mt-1 mx-1 z-50 shadow-md">
+        <header className=" bg-white/70 backdrop-blur-md text-neutral-800 font-semibold fixed top-0 w-full p-3 h-14 pr-5 flex justify-between items-center rounded-xl mt-1 mx-1 z-20 shadow-md">
             <div className="flex items-center">
                 <Link to="/user" className="text-xl font-bold">Bookstore</Link>
             </div>
-            <div className='relative w-1/3 group'>
+            <div className=' w-1/3 '>
                 <form onSubmit={handleSearch}>
                     <div className='flex bg-zinc-100 border border-zinc-200 rounded-xl'>
-                        <input
-                            className='p-2 rounded-l-xl border-r border-slate-200 px-4 font-normal w-full bg-zinc-100 focus:outline-1 focus:outline-blue-800 '
-                            type="text" placeholder='Search Books' value={keyword}
-                            onChange={e => setKeyword(e.target.value)}
-                            required
-                        />
+                        <button className='px-4 text-zinc-500' type='button'>
+                            <RiEqualizerFill />
+                        </button>
+                        <div className='relative w-full group'>
+                            <input
+                                className='p-2 border-l border-r border-slate-200 px-4 font-normal w-full bg-zinc-100 focus:outline-1 focus:outline-blue-800 '
+                                type="text" placeholder='Search Books' value={keyword}
+                                onChange={e => setKeyword(e.target.value)}
+                                required
+                            />
+                            <div className='invisible group-focus-within:visible absolute left-0 right-0 top-full translate-y-1 bg-white rounded-xl shadow-2xl max-h-96 overflow-auto'>
+                                {
+                                    searchResult.length > 0 ? (
+                                        <ul>
+                                            {
+                                                searchResult.map((book, index) => {
+                                                    return (
+                                                        <Link to={`/user/book/${book.bookID}`} key={index}>
+                                                            <li
+                                                                className='p-1 px-2 cursor-pointer hover:bg-slate-100'>{book.title}
+                                                            </li>
+                                                        </Link>
+                                                    )
+                                                })
+                                            }
+                                        </ul>
+                                    ) : (
+                                        isLoading ? (
+                                            <div>
+                                                Loading...
+                                            </div>
+                                        ) : (
+                                            keyword.length > 0 && (
+                                                <div className='p-5'>
+                                                    No Result Found
+                                                </div>
+                                            )
+                                        )
+                                    )
+
+                                }
+                                {
+                                    searchResult.length <= 0 && (
+                                        <div>
+                                            <p className='text-lg p-1'>Suggested categories</p>
+                                            {
+                                                categories.map((category, index) => {
+                                                    return (
+                                                        <Link to={`/user/category/${category}`} key={index}>
+                                                            <li
+                                                                className='p-1 px-2 cursor-pointer list-none font-light hover:bg-slate-100'>{category}
+                                                            </li>
+                                                        </Link>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </div>
                         <button className='px-4 text-zinc-500' type='submit '>
                             <FaSearch />
                         </button>
                     </div>
-                    <div className='invisible group-hover:visible absolute top-full w-full bg-white rounded-xl shadow-2xl max-h-96 overflow-auto'>
-                        {
-                            searchResult.length > 0 ? (
-                                <ul>
-                                    {
-                                        searchResult.map((book, index) => {
-                                            return (
-                                                <Link to={`/user/book/${book.bookID}`} key={index}>
-                                                    <li
-                                                        className='p-1 px-2 cursor-pointer hover:bg-slate-100'>{book.title}
-                                                    </li>
-                                                </Link>
-                                            )
-                                        })
-                                    }
-                                </ul>
-                            ) : (
-                                isLoading ? (
-                                    <div>
-                                        Loading...
-                                    </div>
-                                ) : (
-                                    keyword.length > 0 && (
-                                        <div className='p-5'>
-                                            No Result Found
-                                        </div>
-                                    )
-                                )
-                            )
-                        }
-                    </div>
+
                 </form>
 
 

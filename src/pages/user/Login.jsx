@@ -5,6 +5,7 @@ import UserContext from "../../context/UserContext";
 import axios from "../../Axios/axios";
 import SessionContext from "../../context/sessionContext";
 
+const now = Date.now();
 const LoginPage = () => {
   const navigate = useNavigate();
   const { dispatchUser } = useContext(UserContext);
@@ -93,12 +94,12 @@ const LoginPage = () => {
           <div className="flex items-center justify-between">
 
             <div className="text-sm">
-              <a
-                href="#"
+              <Link
+                to={"/user/forgot-password"}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Forgot your password?
-              </a>
+              </Link>
             </div>
           </div>
 

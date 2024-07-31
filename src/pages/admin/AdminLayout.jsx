@@ -8,6 +8,8 @@ import axios from "../../Axios/axios"
 import UserListReducer from '../../reducer/UserListReducer'
 import Modal from '../../components/admin/Modal'
 import FullScreenModal from '../../components/admin/Modal'
+import { CiMenuFries } from 'react-icons/ci'
+import { IoMenu } from 'react-icons/io5'
 
 function AdminLayout() {
     const [books, dispatchBooks] = useReducer(BookReducer)
@@ -17,6 +19,7 @@ function AdminLayout() {
     const [topCustomerWithMostPurchase, setTopCustomerWithMostPurchase] = useState([]);
     const admin = JSON.parse(localStorage.getItem("admin"))
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showMenu, setShowMenu] = useState(false)
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -77,6 +80,10 @@ function AdminLayout() {
         fetchNearOutOfStockBooks()
         fetchTopCustomerWithMostPurchase()
     }, [admin?.token])
+
+    const handleMenu = () => {
+        setShowMenu(!showMenu)
+    }
     return (
         <>
             <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
@@ -96,11 +103,17 @@ function AdminLayout() {
                 </div>
             </FullScreenModal>
             <AdminContext.Provider value={{ books, dispatchBooks, userList, dispatchUserList, orderList, nearOutOfStock, topCustomerWithMostPurchase }}>
-                <div className='flex gap-x-2 '>
-                    <div className='w-fit'>
-                        <AdminSideBar />
+                <div className='flex flex-wrap gap-x-2 md:flex-nowrap'>
+                    <div>
+                        <div className={`${showMenu ? 'fixed' : 'hidden'} top-0 left-0 z-20 bg-white md:block md:static md:bg-transparent md:w-fit`}>
+                            <AdminSideBar handleMenu={handleMenu}  />
+                        </div>
+                        <div className='fixed h-9 px-2 flex items-center gap-2  bg-white w-full md:hidden border-b z-10'>
+                            <IoMenu className='text-xl ' onClick={handleMenu}/>
+                            <h2 className='text-xl font-semibold opacity-90'>Bookstore</h2>
+                        </div>
                     </div>
-                    <main className=' min-h-screen flex-grow rounded-md max-h-screen overflow-auto'>
+                    <main className='mt-8 md:mt-0 min-h-screen flex-grow rounded-md max-h-screen overflow-auto'>
                         <Outlet />
                     </main>
                 </div>

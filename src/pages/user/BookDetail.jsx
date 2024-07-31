@@ -40,9 +40,10 @@ function BookDetail() {
 
 
     const book = books?.find(book => book.bookID == bookID)
+    console.log("booksdetails => book: ", book);
+    console.log("booksdetails => books: ", books);
     if (currentUser == null) navigate("/user/login")
     useEffect(() => {
-
         const fetchReviews = async () => {
             const res = await axios.get(`/api/review/get-review-by-bookID/${bookID}`, {
                 headers: {
@@ -58,7 +59,6 @@ function BookDetail() {
         fetchReviews()
         scrollToTop()
     }, [bookID, currentUser?.token, user?.email])
-
 
     const handleAddToCart = async (book) => {
         if (user == null) {
@@ -179,23 +179,27 @@ function BookDetail() {
             <FullScreenModal isOpen={isModalOpen} onClose={closeModal}>
                 <NotifyMe />
             </FullScreenModal>
-           
-            <div className='p-2 mt-16'>
-                 {/* create a back button */}
+
+            <div className='p-0 mt-16 md:p-2 '>
+                {/* create a back button */}
                 <button
                     onClick={() => navigate("/user")}
                     className="text-black font-bold py-2 px-4 rounded flex items-center">
-                        <FaAngleLeft className="inline-block" />Back
+                    <FaAngleLeft className="inline-block" />Back
                 </button>
-                <div className='flex'>
+                <div className='flex flex-wrap'>
                     <div className='flex flex-wrap flex-1 gap-4 items center text-zinc-600  md:w-2/5 p-2 rounded-md'>
                         <div className='flex flex-wrap md:flex-nowrap flex-1 gap-4  items center text-zinc-600 p-2 rounded-md'>
-                            <div className='bg-slate-200 w-60 h-80 min-w-60 rounded  '>
-                                <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={book.title} className='w-full h-80 object-cover rounded' />
+                            <div className=' w-full md:w-fit md:h-80 rounded flex justify-center '>
+                                <div className='bg-slate-200'>
+                                    <img src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`} alt={book.title} className='w-50 h-60 md:w-fit md:h-80 object-contain rounded' />
+                                </div>
                             </div>
                             <div className='flex-grow py-2 relative '>
-                                <p className=' text-sm text-white font-semibold bg-orange-600 rounded-md px-1 w-fit'>{book.category}</p>
-                                <p className='text-2xl font-bold text-wrap w-full'>{book.title}</p>
+                                <div className='flex flex-row-reverse items-center md:items-start md:flex-col'>
+                                    <p className=' text-sm text-white font-semibold bg-orange-600 rounded-md p-1 w-fit'>{book.category}</p>
+                                    <p className='text-2xl font-bold text-wrap w-full'>{book.title}</p>
+                                </div>
                                 <p className='text-blue-400'>{book.author}</p>
                                 <p className='font-bold text-lg '>&#8377; {book.price}</p>
                                 <p className='text-zinc-500'>
@@ -236,14 +240,14 @@ function BookDetail() {
                                 }
                                 {
                                     book.stock > 0 ? (
-                                        <div className='mt-2'>
+                                        <div className='mt-2 w-full flex'>
                                             <button
                                                 onClick={() => handleAddToCart(book)}
-                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Add to Cart
+                                                className="flex-grow md:flex-grow-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Add to Cart
                                             </button>
                                             <button
                                                 onClick={handleBuyNow}
-                                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Buy Now
+                                                className="flex-grow md:flex-grow-0 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Buy Now
                                             </button>
                                         </div>
                                     ) : (
@@ -275,62 +279,70 @@ function BookDetail() {
             </div>
 
             {/* Write a Review */}
-            <div className='flex justify-center bg-slate-200'>
-                <div className=" p-1 py-3 rounded-lg shadow-sm w-1/2">
-                    <h3 className="text-center text-xl font-bold py-4 ">{reviewExists ? "Your Review" : "Write Review"}</h3>
-                    <div className="flex justify-center gap-1 text-slate-400">
-                        {
-                            Array.from({ length: 5 }).map((a, index) => {
-                                return (
-                                    <FaStar
-                                        key={index}
-                                        className={`${userReview?.rating > index ? 'text-orange-500' : 'text-slate-400'} text-3xl cursor-pointer`}
-                                        onClick={(e) => {
-                                            if (!reviewExists) {
-                                                setUserReview({ ...userReview, rating: index + 1 })
-                                            }
-                                        }}
-                                    />
-                                )
-                            })
-                        }
+            {
+                user == null ? (
+                    <div className='p-1 py-3 rounded-lg shadow-sm text-center'>
+                        Please login to write review
                     </div>
-                    {
-                        showError && <p className='text-center mt-1 text-red-900 text-sm'>Please select rating!</p>
-                    }
-                    <div className=" flex items-center gap-2 mt-4">
-                        <form className='flex items-center gap-2 mt-4 w-full' onSubmit={handleSubmitReview}>
-                            <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
-                                <p>{user?.firstName[0].toUpperCase()}</p>
+                ) : (
+                    <div className='flex flex-wrap justify-center w-full bg-slate-200'>
+                        <div className=" p-1 py-3 rounded-lg shadow-sm w-full md:w-1/2">
+                            <h3 className="text-center text-xl font-bold py-4 ">{reviewExists ? "Your Review" : "Write Review"}</h3>
+                            <div className="flex justify-center gap-1 text-slate-400">
+                                {
+                                    Array.from({ length: 5 }).map((a, index) => {
+                                        return (
+                                            <FaStar
+                                                key={index}
+                                                className={`${userReview?.rating > index ? 'text-orange-500' : 'text-slate-400'} text-3xl cursor-pointer`}
+                                                onClick={(e) => {
+                                                    if (!reviewExists) {
+                                                        setUserReview({ ...userReview, rating: index + 1 })
+                                                    }
+                                                }}
+                                            />
+                                        )
+                                    })
+                                }
                             </div>
                             {
-                                reviewExists ? (
-                                    <div className='border p-2 rounded-md bg-slate-100 w-fit italic text-zinc-500'>
-                                        <q>{userReview?.comment}</q>
+                                showError && <p className='text-center mt-1 text-red-900 text-sm'>Please select rating!</p>
+                            }
+                            <div className=" flex items-center gap-2 mt-4">
+                                <form className='flex flex-wrap items-center gap-2 mt-4 w-full' onSubmit={handleSubmitReview}>
+                                    <div className="bg-red-700 text-white rounded-full w-10 h-10 font-extrabold flex justify-center items-center">
+                                        <p>{user?.firstName[0].toUpperCase()}</p>
                                     </div>
-                                ) : (
-                                    <textarea
-                                        placeholder="Write a review..."
-                                        rows={4}
-                                        className="flex-grow border border-slate-400 rounded-md p-2"
-                                        value={userReview?.comment}
-                                        onChange={(e) => setUserReview({ ...userReview, comment: e.target.value })}
-                                    />
-                                )
-                            }
-                            {
-                                !reviewExists && (
-                                    <button
-                                        type='submit'
-                                        className="bg-blue-700 text-white px-2 p-1 rounded-md"
-                                    >Submit</button>
-                                )
-                            }
-                        </form>
+                                    {
+                                        reviewExists ? (
+                                            <div className='border p-2 rounded-md bg-slate-100 w-fit italic text-zinc-500'>
+                                                <q>{userReview?.comment}</q>
+                                            </div>
+                                        ) : (
+                                            <textarea
+                                                placeholder="Write a review..."
+                                                rows={4}
+                                                className="flex-grow border border-slate-400 rounded-md p-2"
+                                                value={userReview?.comment}
+                                                onChange={(e) => setUserReview({ ...userReview, comment: e.target.value })}
+                                            />
+                                        )
+                                    }
+                                    {
+                                        !reviewExists && (
+                                            <button
+                                                type='submit'
+                                                className="bg-blue-700 text-white px-2 p-1 rounded-md"
+                                            >Submit</button>
+                                        )
+                                    }
+                                </form>
 
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                )
+            }
             <div>
                 <div>
                     <BookSuggestion
@@ -339,7 +351,7 @@ function BookDetail() {
                         bookID={bookID}
                         handleClick={scrollToTop} />
                 </div>
-                
+
             </div>
             {showDeleteModal && <DeleteModal onDelete={handleDelete} onCancel={handleCancel} />}
         </>

@@ -63,28 +63,28 @@ function OrderHistory() {
     }
 
     fetchOrderHistory()
-  }, [currentUser.token])
+  }, [currentUser?.token])
 
   console.log("order: ", orders);
 
   return (
     <>
-    <Header/>
-      <div className="flex items-center justify-center font-medium mt-16">
-        <div className="flex flex-col px-11 pt-5 bg-white border m-4 rounded shadow-sm md:w-2/3 md:max-w-2/3 max-md:px-5">
-          <div className="flex gap-4 self-start text-xs leading-5 text-zinc-900">
-            <div className="my-auto">Your Orders</div>
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8054ff3fc038c98b2464096952a85d87f9410d03a469547224309f226c5ac80?apiKey=9f77487837bf4515971f5e92222e87f9&"
-              alt=""
-              className="shrink-0 w-9 border border-violet-600 border-solid aspect-[1.79]"
-            />
-          </div>
+      <Header />
+      <div className="mt-20 flex justify-center items-center gap-4 leading-5 text-zinc-900">
+        <div className="my-auto">Your Orders</div>
+        <img
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8054ff3fc038c98b2464096952a85d87f9410d03a469547224309f226c5ac80?apiKey=9f77487837bf4515971f5e92222e87f9&"
+          alt=""
+          className="shrink-0 w-9 border border-violet-600 border-solid aspect-[1.79]"
+        />
+      </div>
+      <div className="flex flex-wrap items-center justify-center font-medium  w-full">
+        <div className="flex justify-center md:px-11 md:m-4 rounded md:w-2/3 md:max-w-2/3">
           {
             orders.length > 0 ? (
               <div>
-                <div className="flex gap-5 justify-between mt-5 rounded-lg w-full max-md:flex-wrap max-md:max-w-full bg-zinc-100 p-1 ">
-                  <div className="flex gap-0 bg-zinc-100 rounded-lg">
+                <div className="flex flex-wrap gap-y-2 justify-between mt-5 rounded-lg bg-zinc-100 md:bg-zinc-200 p-1 ">
+                  <div className="flex flex-wrap gap-0 bg-zinc-100 rounded-lg">
                     <div className="justify-center px-9 py-2.5 text-xs leading-5 whitespace-nowrap bg-white rounded-lg text-zinc-900 max-md:px-5">
                       Orders
                     </div>
@@ -93,14 +93,14 @@ function OrderHistory() {
                       <button>Cancelled Orders</button>
                     </div>
                   </div>
-                  <select name="time-period" id="time-period" className="flex gap-1.5 justify-center p-2.5 my-auto text-xs leading-5 rounded border border-solid bg-zinc-100 border-zinc-400 text-zinc-900 ">
+                  <select name="time-period" id="time-period" className="flex gap-1.5 justify-center p-2.5 my-auto text-xs leading-5 rounded  bg-zinc-100 border-zinc-400 text-zinc-900 ">
                     <option value="1-month">Past 1 Month</option>
                     <option value="3-month">Past 3 Month</option>
                     <option value="All">All</option>
                   </select>
                 </div>
                 {orders.map((order, index) => (
-                  <div className="mb-5">
+                  <div className="md:mb-5">
                     <OrderDetails key={index} order={order} />
                   </div>
 

@@ -112,7 +112,7 @@ function Orders() {
           />
         </div>
         <div className=''>
-          <div className="border rounded-lg shadow-md bg-gray-50 mb-4">
+          <div className="border rounded-lg shadow-md bg-gray-50 mb-4 overflow-x-auto">
             <table className="w-full border-collapse text-center">
               <thead className='bg-slate-200'>
                 <tr>

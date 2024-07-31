@@ -54,14 +54,14 @@ const modal = {
             {
                 showEditForm ? (
                     <div className={`border p-5 py-3 w-full ${showEditForm && 'bg-slate-50'}`}>
-                        <div className=' w-2/3'>
+                        <div className='w-fit md:w-2/3'>
                             <p className='uppercase text-blue-600'>Edit Address</p>
                             <AddressForm add={address} handleCancel={handleCancel} />
                         </div>
                     </div>
                 ) : (
                     <div className={` relative border w-full p-2 shadow-sm rounded-lg my-4 bg-slate-50 `} onClick={handlePropagation}>
-                        <div className="p-2 w-2/3">
+                        <div className="p-2 w-fit md:w-2/3">
                             <div className=' relative flex items-center justify-between'>
                                 <div className='flex items-center gap-x-1 p-1 px-1  text-zinc-500 rounded-md bg-slate-200 w-fit'>
                                     <AiFillHome />
@@ -73,7 +73,7 @@ const modal = {
                                 <span>{address?.mobileNo}</span>
                             </p>
                             <div className='flex items-center gap-x-2 text-zinc-500'>
-                                <FaBuilding />
+                                <FaBuilding className='hidden md:block' />
                                 <p className='text-zinc-500'>
                                     <span>{address?.building}, </span>
                                     <span>{address?.street}, </span>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
@@ -30,7 +31,7 @@ const User = ({ user, onEdit, onRemove, isCurrentAdmin }) => {
                 <DeleteModalContent modal={modalData} onClose={closeModal} onConfirm={handleDelete} />
             </FullScreenModal>
             <div className={`border rounded-lg p-4 shadow-md relative flex flex-col items-center ${isCurrentAdmin ? 'bg-blue-200' : user.role === 'ADMIN' ? 'bg-yellow-100' : 'bg-blue-100'}`}>
-                <div className="absolute top-2 right-2 flex space-x-2">
+                {/* <div className="absolute top-2 right-2 flex space-x-2">
                     <button
                         className="bg-blue-500 text-white p-2 rounded-full"
                         onClick={() => onEdit(user.userID)}
@@ -47,7 +48,7 @@ const User = ({ user, onEdit, onRemove, isCurrentAdmin }) => {
                             </button>
                         )
                     }
-                </div>
+                </div> */}
                 {user.role === 'ADMIN' && (
                     <div className={`absolute top-2 left-2 ${isCurrentAdmin ? 'bg-blue-700' : 'bg-red-500'} text-white px-2 py-1 rounded text-xs`}>
                         {isCurrentAdmin ? 'You' : 'Admin'}

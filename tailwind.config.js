@@ -8,6 +8,7 @@ export default {
     extend: {
       backgroundImage: {
         'hero-pattern': "url('/assets/hero.jpg')",
+        'blob-pattern': "url('/assets/password_reset_bg.svg')",
       }
     },
   },

@@ -58,16 +58,16 @@ function PersonalInfo() {
           }
         </div>
         <form className='w-fit'>
-          <div className='flex gap-x-5 '>
-            <div className='flex flex-col '>
+          <div className='flex flex-wrap gap-x-5 gap-y-2 w-full '>
+            <div className='flex flex-col w-full max-w-sm md:w-fit '>
               <label htmlFor="firstName" className='text-sm text-slate-500'>First Name</label>
               <input type="text" name="firstName" id='firstName' value={userDetails?.firstName}
                 onChange={handleInputChange}
-                className='p-2 rounded-md bg-slate-50 border disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
+                className='p-2 rounded-md w-full bg-slate-50 border disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
                 disabled={!infoEditable}
               />
             </div>
-            <div className='flex flex-col '>
+            <div className='flex flex-col w-full max-w-sm md:w-fit '>
               <label htmlFor="lastName" className='text-sm text-slate-500'>Last Name</label>
               <input type="text" id='lastName' name='lastName' value={userDetails?.lastName}
                 onChange={handleInputChange}
@@ -106,7 +106,7 @@ function PersonalInfo() {
           {
             infoEditable && (
               <div className='flex justify-center'>
-                <button className='bg-blue-600 text-white p-1 px-4 rounded-sm' onClick={handleSubmit}>Save</button>
+                <button className='bg-blue-600 text-white p-1 px-4 mt-2 rounded-sm' onClick={handleSubmit}>Save</button>
               </div>
             )
           }
@@ -124,8 +124,8 @@ function PersonalInfo() {
             )
           }
         </div>
-        <form>
-          <div className='w-2/5 flex gap-x-4'>
+        <form className=''>
+          <div className='w-full max-w-sm md:w-2/5 flex gap-x-4'>
             <input type="email" value={userDetails?.email}
               onChange={handleInputChange}
               className='p-2 rounded-md bg-slate-50 border w-full disabled:opacity-75 disabled:bg-slate-200  disabled:cursor-not-allowed'
@@ -150,7 +150,7 @@ function PersonalInfo() {
           }
         </div>
         <form>
-          <div className='w-2/5 flex gap-x-4 '>
+          <div className='w-full max-w-sm md:w-2/5 flex gap-x-4 '>
             <input type="number" value={userDetails?.mobileNumber}
               onChange={handleInputChange}
               className='p-2 rounded-md bg-slate-50 border w-full disabled:opacity-75 disabled:bg-slate-200 disabled:cursor-not-allowed'

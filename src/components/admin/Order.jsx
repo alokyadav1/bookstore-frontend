@@ -16,8 +16,8 @@ const Order = ({ order, user }) => {
 
     return (
         <>
-            <div className="border rounded-lg p-4 shadow-md bg-gray-50 mb-4">
-                <table className="w-full text-left border-collapse">
+            <div className="border rounded-lg p-4 shadow-md bg-gray-50 mb-4 ">
+                <table className="w-full text-left border-collapse ">
                     <thead>
                         <tr>
                             <th className="px-4 py-2 border-b-2">Order ID</th>

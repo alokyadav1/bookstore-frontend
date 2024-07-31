@@ -18,10 +18,10 @@ function Home() {
     </header>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600">
         <div className="space-y-8 text-center text-white">
-          <h2 className="text-4xl font-extrabold">
+          <h2 className="text-4xl md:text-2xl sm:text-sm font-extrabold">
             Welcome! Are you a User or Admin?
           </h2>
-          <div className="flex justify-center space-x-8">
+          <div className="flex flex-wrap justify-center gap-10">
             <div
               onClick={() => navigateToPortal('user')}
               className="group w-64 h-80 bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 cursor-pointer"

@@ -77,7 +77,7 @@ function Books() {
             </button>
           </div>
         </div>
-        <div className="mb-4 flex space-x-4">
+        <div className="mb-4 flex flex-wrap gap-2">
           <input
             type="text"
             placeholder="Search by title or author"

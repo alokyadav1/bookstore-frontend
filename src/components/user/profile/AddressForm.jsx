@@ -43,7 +43,7 @@ function AddressForm({ add = null, handleCancel }) {
         <div>
             <ToastContainer />
             <form className='mt-3 space-y-3' onSubmit={handleSubmit}>
-                <div className='flex flex-wrap gap-x-5 '>
+                <div className='flex flex-wrap gap-x-5 gap-y-2'>
                     <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
                         <label htmlFor="name" className='text-xs text-gray-400 px-2 w-full'>Name</label>
                         <input type="text" placeholder='' id='name' name='name'
@@ -62,7 +62,7 @@ function AddressForm({ add = null, handleCancel }) {
                     </div>
                 </div>
 
-                <div className='flex flex-wrap gap-x-5'>
+                <div className='flex flex-wrap gap-x-5 gap-y-2'>
                     <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
                         <label htmlFor="pin" className='text-xs text-gray-400 px-2 w-full'>Pin Code</label>
                         <input type="number" placeholder='' id='pin' name='pinCode'
@@ -91,7 +91,7 @@ function AddressForm({ add = null, handleCancel }) {
                     />
                 </div>
 
-                <div className='flex flex-wrap gap-x-5'>
+                <div className='flex flex-wrap gap-x-5 gap-y-2'>
                     <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
                         <label htmlFor="city" className='text-xs text-gray-400 px-2 w-full'>City</label>
                         <input type="text" placeholder='' id='city' name='city'
@@ -115,7 +115,7 @@ function AddressForm({ add = null, handleCancel }) {
 
                 </div>
 
-                <div className='flex flex-wrap gap-x-5'>
+                <div className='flex flex-wrap gap-x-5 gap-y-2'>
                     <div className='relative flex-grow border bg-white focus-within:outline focus-within:outline-1 focus-within:outline-blue-600 rounded-md'>
                         <label htmlFor="landmark" className='text-xs text-gray-400 px-2 w-full'>Landmark (Optional)</label>
                         <input type="text" placeholder='' id='landmark' name='landmark'
@@ -126,7 +126,7 @@ function AddressForm({ add = null, handleCancel }) {
                     </div>
 
 
-                    <div className='flex items-center justify-center gap-x-5 relative flex-grow'>
+                    <div className='flex items-center md:justify-center gap-x-5 gap-y-2 relative flex-grow'>
                         <div className='flex items-center gap-x-2'>
                             <label htmlFor="home">Home</label>
                             <input type="radio" id='home' value="Home" name='addressType' onChange={handleInputChange} />
@@ -139,9 +139,9 @@ function AddressForm({ add = null, handleCancel }) {
                 </div>
 
 
-                <div className='space-x-2 mt-5'>
-                    <button className='bg-blue-700 text-white py-2 px-5 rounded-md' type='submit'>Save</button>
+                <div className=' flex justify-between md:block md:space-x-2 mt-5'>
                     <button className='py-2 px-5' onClick={handleCancel}>Cancel</button>
+                    <button className='bg-blue-700 text-white py-2 px-5 rounded-md' type='submit'>Save</button>
                 </div>
             </form>
         </div>

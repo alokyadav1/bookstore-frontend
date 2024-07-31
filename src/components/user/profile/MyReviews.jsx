@@ -30,15 +30,15 @@ function MyReviews() {
           reviews?.length > 0 ? (
             reviews?.map((rev, index) => {
               return (
-                <div key={index} className='flex justify-center pb-2'>
-                  <div className='flex gap-2 p-2 rounded-md  w-3/5  bg-slate-100 shadow-md'>
+                <div key={index} className='flex justify-center pb-2 '>
+                  <div className='flex flex-col items-center md:flex-row gap-2 p-2 rounded-md w-fit md:w-3/5  bg-slate-100 md:shadow-md'>
                     <div className='w-1/4 flex justify-center gap-x-5 items-center'>
                       <div className='flex gap-x-2 border'>
                         <img src={`https://covers.openlibrary.org/b/isbn/${rev.book.isbn}-L.jpg`} alt={rev.book.title} width={80} />
                         {/* <p>Book name</p> */}
                       </div>
                     </div>
-                    <div className=' w-3/4'>
+                    <div className=' md:w-3/4'>
                       <div className='flex items-center gap-x-3 mb-2'>
                         <div className='flex gap-x-1 items-center '>
                           {

@@ -39,6 +39,10 @@ import Inventory from './pages/admin/Inventory'
 import SessionContext from './context/sessionContext'
 import FullScreenModal from './components/admin/Modal'
 import Alert from './components/Alert'
+import SessionAlertModal from './components/SessionAlertModal'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import NotFound from './pages/NotFound'
 
 function App() {
 
@@ -54,15 +58,21 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async (token) => {
-      const res = await axios.get("/api/user/get-user", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      dispatchUser({
-        type: "SET_USER",
-        payload: res.data.user
-      })
+      try {
+        const res = await axios.get("/api/user/get-user", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        console.log("App.js: ", res.data);
+        dispatchUser({
+          type: "SET_USER",
+          payload: res.data.user
+        })
+      } catch (error) {
+        console.log("Error: ", error);
+        localStorage.clear()
+      }
     }
 
     if (currentUser?.token != null) {
@@ -75,26 +85,26 @@ function App() {
 
   }, [])
 
-  useEffect(() => {
-    if (session.isLoggedIn) {
-      const tokenExpirationTimeout = setTimeout(() => {
-        if(userRole === 'USER'){
-          setCurrentLoggedInUser("user")
-          localStorage.removeItem('userRole');
-          localStorage.removeItem('currentUser');
-        } else if(userRole === 'ADMIN'){
-          setCurrentLoggedInUser("admin")
-          localStorage.removeItem('userRole');
-          localStorage.removeItem('admin');
-        }
-       
-        setTokenExpired(true)
-      }, 1000 * 5)
-      setTimeoutID(tokenExpirationTimeout)
-    }
+  // useEffect(() => {
+  //   if (session.isLoggedIn) {
+  //     const tokenExpirationTimeout = setTimeout(() => {
+  //       if (userRole === 'USER') {
+  //         setCurrentLoggedInUser("user")
+  //         localStorage.removeItem('userRole');
+  //         localStorage.removeItem('currentUser');
+  //       } else if (userRole === 'ADMIN') {
+  //         setCurrentLoggedInUser("admin")
+  //         localStorage.removeItem('userRole');
+  //         localStorage.removeItem('admin');
+  //       }
 
-    return () => clearTimeout(timeoutID)
-  }, [session])
+  //       setTokenExpired(true)
+  //     }, 1000 * 120)
+  //     setTimeoutID(tokenExpirationTimeout)
+  //   }
+
+  //   return () => clearTimeout(timeoutID)
+  // }, [session])
 
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
@@ -110,6 +120,19 @@ function App() {
     }
 
     return children;
+  }
+
+  const ProtectedUserProfile = ({ children }) => {
+    const storedRole = localStorage.getItem('userRole');
+    const storedUser = localStorage.getItem('currentUser');
+
+    if (storedRole !== 'USER' || !storedUser) {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('currentUser');
+      return <Navigate to="/user/login" />;
+    }
+
+    return children
   }
   return (
     <>
@@ -134,7 +157,7 @@ function App() {
                 <Route path='category/:categoryName' element={<Category />} />
                 <Route path='search/:keyword' element={<SearchResult />} />
                 <Route path='book/:bookID' element={<BookDetail />} />
-                <Route path='profile' element={<ProfileLayout />}>
+                <Route path='profile' element={<ProtectedUserProfile><ProfileLayout /></ProtectedUserProfile>}>
                   <Route index element={<PersonalInfo />} />
                   <Route path='address' element={<ManageAddress />} />
                   <Route path='myreviews' element={<MyReviews />} />
@@ -154,14 +177,20 @@ function App() {
 
               <Route path='/user/login' element={<LoginPage />} />
               <Route path='/user/register' element={<Register />} />
+              <Route path='/user/forgot-password' element={<ForgotPassword />} />
+              <Route path='/user/reset-password/:token' element={<ResetPassword />} />
               <Route path='/user/not-verified' element={<UserNotVerified />} />
               <Route path='/user/verify/:token' element={<EmailVerificationSuccess />} />
               <Route path='/admin/login' element={<AdminLogin />} />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </UserContext.Provider>
       </SessionContext.Provider>
 
+      {
+        user != null && <SessionAlertModal />
+      }
 
     </>
   )

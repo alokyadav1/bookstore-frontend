@@ -17,7 +17,6 @@ const calculateTotalSales = (orders) => {
 function AdminDash() {
   const { books, userList, orderList, topCustomerWithMostPurchase } = useContext(AdminContext)
 
-
   const stats = [
     { title: 'Users', value: userList?.length, icon: <FaUser />, color: 'text-blue-500', bgColor: 'bg-blue-500' },
     { title: 'Books', value: books?.length, icon: <FaBook />, color: 'text-green-500', bgColor: 'bg-green-500' },
@@ -40,11 +39,11 @@ function AdminDash() {
           />
         ))}
       </div>
-      <div className='flex items-stretch '>
-        <div className='flex-grow w-1/3 border rounded shadow-lg px-2 ml-4 mr-2 bg-white'>
+      <div className='flex flex-wrap gap-2 items-stretch '>
+        <div className='flex-grow w-full mx-1 md:w-1/3 border rounded shadow-lg md:px-2 md:ml-4 md:mr-2 bg-white'>
           <BooksBarChart inputData={books} />
         </div>
-        <div className='flex-grow bg-white rounded-lg shadow-md mx-4'>
+        <div className='flex-grow overflow-x-auto mx-1 bg-white rounded-lg shadow md:shadow-md md:mx-4'>
           <h2 className='m-2 text-center  text-lg font-medium text-gray-900 mb-4'>Top Customers by Orders</h2>
           <table className=' min-w-full divide-y divide-gray-200 text-center'>
             <thead className='bg-gray-50'>

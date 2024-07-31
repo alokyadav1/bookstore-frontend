@@ -127,7 +127,7 @@ function Inventory() {
                 <h1 className="text-2xl font-bold mb-4">Inventory</h1>
                 <div>
                     <div className="relative container mx-auto mt-10">
-                        <div className='flex flex-wrap items-center justify-between mb-2'>
+                        <div className='flex flex-wrap items-center justify-between mb-2 gap-y-4'>
                             <h1 className="text-xl font-bold">Book Near Out of Stock</h1>
                             <div className='flex gap-x-5'>
                                 <div className=' relative border border-gray-400 rounded p-1 flex items-center gap-x-2'>

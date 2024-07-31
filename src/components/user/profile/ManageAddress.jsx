@@ -28,8 +28,8 @@ function ManageAddress() {
         <div className={`border rounded-md ${showAddressForm && 'bg-slate-50'}`}>
           {
             showAddressForm ? (
-              <div className='p-5 py-3 w-2/3'>
-                <p className='uppercase text-blue-600'>Add a New Address</p>
+              <div className='p-5 py-3 w-fit md:w-2/3'>
+                <p className='uppercase text-blue-600 text-center md:text-left'>Add a New Address</p>
                 <AddressForm handleCancel={handleCancel} />
               </div>
             ) : (

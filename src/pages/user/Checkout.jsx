@@ -91,7 +91,7 @@ const CheckoutPage = () => {
     }
 
     const formateAddress = (address) => {
-        const add = `${address.building},${address?.street},${address?.city},${address?.state}-${address?.pinCode}`
+        const add = `${address?.building},${address?.street},${address?.city},${address?.state}-${address?.pinCode}`
         const recipientName = address?.name
         const recipientMobile = address?.mobileNo
 

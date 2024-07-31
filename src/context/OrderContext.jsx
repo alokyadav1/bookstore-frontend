@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, createContext } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react'
 import axios from "../Axios/axios"
+import UserContext from './UserContext'
 
 
 const OrderContext = createContext()
@@ -15,11 +16,14 @@ const headers = {
 }
 
 function OrderProvider({ children }) {
+    const { user } = useContext(UserContext)
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchOrders()
+        if (user != null) {
+            fetchOrders()
+        }
     }, [])
 
     const fetchOrders = async () => {

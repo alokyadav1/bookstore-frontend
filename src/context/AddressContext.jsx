@@ -1,20 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, createContext } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react'
 import axios from "../Axios/axios"
+import UserContext from './UserContext'
 
 
 const AddressContext = createContext()
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser"))
-const headers = {
+const headersData = {
     headers: {
         Authorization: `Bearer ${currentUser?.token}`
     }
 }
 
 function AddressProvider({ children }) {
+    const { user } = useContext(UserContext)
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true)
 
@@ -24,10 +26,15 @@ function AddressProvider({ children }) {
 
     const fetchAddress = async () => {
         try {
-            const res = await axios.get("/api/address/get-user-address", headers)
+            const res = await axios.get("/api/address/get-user-address", {
+                headers: {
+                    Authorization: `Bearer ${currentUser?.token}`
+                }
+            })
             console.log("address: ", res?.data);
             setAddresses(res.data)
         } catch (error) {
+            
             console.log(error);
         } finally {
             setLoading(false)
@@ -36,7 +43,7 @@ function AddressProvider({ children }) {
 
     const addAddress = async (address) => {
         try {
-            const res = await axios.post("/api/address/add", address, headers)
+            const res = await axios.post("/api/address/add", address, headersData)
             setAddresses([...addresses, address])
             return true;
         } catch (error) {
@@ -47,11 +54,11 @@ function AddressProvider({ children }) {
 
     const updateAddress = async (updatedAddress) => {
         try {
-            const res = await axios.patch("/api/address/update-address", updatedAddress, headers)
+            const res = await axios.patch("/api/address/update-address", updatedAddress, headersData)
             // update the address in state also
             const updatedAddresses = addresses.map((address) => {
                 if (address.addressID == updatedAddress.addressID) {
-                    return {...updatedAddress};
+                    return { ...updatedAddress };
                 }
                 return address
             })
@@ -64,8 +71,8 @@ function AddressProvider({ children }) {
         }
     }
 
-    const deleteAddress = async() => {
-        
+    const deleteAddress = async () => {
+
     }
 
 

@@ -16,7 +16,7 @@ import AppContext from '../../../context/AppContext'
 import CategorySection from '../Category'
 import { Link } from 'react-router-dom'
 import axios from "../../../Axios/axios"
-import { Virtual, Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Virtual, Autoplay, Navigation, Pagination, FreeMode} from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
@@ -25,8 +25,11 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import OrderContext from '../../../context/OrderContext.jsx'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
+import User from '../../../components/admin/User.jsx'
+import UserContext from '../../../context/UserContext.js'
 
 function Dashboard() {
+    const { user } = useContext(UserContext)
     const { orders } = useContext(OrderContext)
     const { books, cart } = useContext(AppContext);
     const [categoryBooks, setCategoryBooks] = useState({})
@@ -103,17 +106,20 @@ function Dashboard() {
             try {
                 const res = await axios.get("/api/book/suggested", {
                     headers: {
-                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("currentUser")).token}`
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("currentUser"))?.token}`
                     }
                 })
                 setSuggested(res.data)
+                console.log("suggested", res.data);
             } catch (error) {
                 console.log("error", error);
             }
         }
+        if (user != null) {
+            fetchSuggestedBooks()
+        }
         fetchBestSellerBooks()
-        fetchSuggestedBooks()
-    }, [])
+    }, [user])
 
     return (
         <div>
@@ -153,13 +159,13 @@ function Dashboard() {
                 </section> */}
 
 
-                <section className='flex flex-wrap justify-around items-center gap-y-4 p-5 bg-slate-100'>
+                <section className='flex flex-wrap justify-around items-center p-5 bg-slate-100'>
                     {
                         categorySection.map((category, index) => {
                             return (
-                                <div key={index} className='w-1/5 flex justify-center items-center'>
+                                <div key={index} className='w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex justify-center items-center mb-4'>
                                     <Link to={`category/${category.title}`} className='text-center cursor-pointer'>
-                                        <img src={category.img} alt={category.title} className='w-16' />
+                                        <img src={category.img} alt={category.title} className='w-16 mx-auto' />
                                         <p>{category.title}</p>
                                     </Link>
                                 </div>
@@ -168,15 +174,16 @@ function Dashboard() {
                     }
                 </section>
 
+
                 {/* Suggested for you */}
                 {
-                    orders.length > 0 && (
+                    suggested?.length > 0 && (
                         <section>
                             <h2 className='text-2xl my-5 mx-2'>Suggested for you</h2>
                             <div className='relative'>
                                 <Swiper
                                     // install Swiper modules
-                                    modules={[Virtual, Navigation, Pagination]}
+                                    modules={[FreeMode, Navigation, Pagination]}
                                     spaceBetween={50}
                                     slidesPerView={4}
                                     slidesPerGroup={4}
@@ -186,7 +193,7 @@ function Dashboard() {
                                             prevEl: '.swiper-button-prev-custom',
                                         }
                                     }
-                                    virtual
+                                    
                                     scrollbar={{ draggable: true }}
                                     onSwiper={setSwiperRef}
                                     className='flex items-center'
